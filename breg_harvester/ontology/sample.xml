@@ -54,7 +54,7 @@
         <dct:identifier>Catalog unique ID</dct:identifier>
         <dct:title>Catalog title</dct:title>
         <dct:publisher rdf:resource="http://www.fundacionctic.org/breg-data#sample-agent"/>
-        <dcat:themeTaxonomy rdf:resource="http://www.fundacionctic.org/breg-data#sample-schemes"/>
+        <dcat:themeTaxonomy rdf:resource="http://www.fundacionctic.org/breg-data#sample-scheme"/>
     </rdf:Description>
 
     <rdf:Description rdf:about="http://www.fundacionctic.org/breg-data#sample-agent">
