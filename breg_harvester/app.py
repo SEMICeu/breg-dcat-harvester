@@ -116,8 +116,8 @@ def create_app(test_config=None):
 
 
 def run_wsgi_server():
-    port = os.getenv(ENV_PORT, DEFAULT_PORT)
-    spawn = os.getenv(ENV_SPAWN, DEFAULT_SPAWN)
+    port = int(os.getenv(ENV_PORT, DEFAULT_PORT))
+    spawn = int(os.getenv(ENV_SPAWN, DEFAULT_SPAWN))
 
     app = create_app()
 
