@@ -7,7 +7,6 @@ from rq import Queue
 
 ENV_TIMEOUT = "BREG_TIMEOUT"
 DEFAULT_TIMEOUT = 1800
-QUEUE_NAME = "breg-harvester"
 
 _logger = logging.getLogger(__name__)
 
@@ -17,7 +16,6 @@ def get_queue(connection=None):
     default_timeout = int(os.getenv(ENV_TIMEOUT, DEFAULT_TIMEOUT))
 
     return Queue(
-        name=QUEUE_NAME,
         connection=connection,
         default_timeout=default_timeout)
 
