@@ -1,0 +1,1362 @@
+﻿<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [
+    <!ENTITY dct "http://purl.org/dc/terms/" >
+    <!ENTITY foaf "http://xmlns.com/foaf/0.1/" >
+    <!ENTITY dcat "http://www.w3.org/ns/dcat#" >
+    <!ENTITY adms "http://www.w3.org/ns/adms#" >
+    <!ENTITY vann "http://purl.org/vocab/vann/" >
+    <!ENTITY cc "http://creativecommons.org/ns#" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY vcard "http://www.w3.org/2006/vcard/ns#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY sdmx "http://purl.org/linked-data/sdmx#" >
+    <!ENTITY qb "http://purl.org/linked-data/cube#" >
+    <!ENTITY wdrs "http://www.w3.org/2007/05/powder-s#" >
+    <!ENTITY voaf "http://purl.org/vocommons/voaf#" >
+    <!ENTITY skos "http://www.w3.org/2004/02/skos/core#" >
+    <!ENTITY skosDoc "http://www.w3.org/TR/skos-primer/">
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY documentation "https://joinup.ec.europa.eu/collection/access-base-registries/solution/abr-specification-registry-registries">
+    <!ENTITY documentationTitle "BRegDCAT Application Profile for Base Registries in Europe">
+    <!ENTITY spdx "http://spdx.org/rdf/terms#">
+]>
+<!-- About the application profile -->
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:dct="http://purl.org/dc/terms/"
+        xmlns:cpsv="http://purl.org/vocab/cpsv#"
+        xmlns:cv="http://data.europa.eu/m8g/"
+        xmlns:adms="http://www.w3.org/ns/adms#"
+        xmlns:foaf="http://xmlns.com/foaf/0.1/"
+        xmlns:odrl="http://www.w3.org/ns/odrl/2/"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:eli="http://data.europa.eu/eli/ontology#"
+        xmlns:dcat="http://www.w3.org/ns/dcat#"
+        xmlns:lcon="http://www.w3.org/ns/locn#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:prov="http://www.w3.org/ns/prov#"
+        xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        xmlns:schema="http://schema.org/"
+        xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+        xmlns:vann="http://purl.org/vocab/vann/"
+        xmlns:voaf="http://purl.org/vocommons/voaf#"
+        xmlns:wdrs="http://www.w3.org/2007/05/powder-s#"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+        xmlns:spdx="http://spdx.org/rdf/terms#"
+        xmlns:time="http://www.w3.org/2006/time#"
+        xmlns:org="http://www.w3.org/ns/org#"
+        xmlns:dqv="http://www.w3.org/ns/dqv#"
+        xmlns:dcatap="http://data.europa.eu/r5r/">
+
+<owl:Ontology rdf:about="http://joinup.ec.europa.eu/collection/access-base-registries/solution/abr-specification-registry-registries">
+              <rdfs:label xml:lang="en">BRegDCAT Application Profile for Base Registries in Europe</rdfs:label>
+        <dct:modified rdf:datatype="xsd:date">2020-07-15</dct:modified>
+        <dct:abstract xml:lang="en">BRegDCAT Application Profile for Base Registries in Europe is a specification based on the DCAT-AP and CPSV-AP vocabularies for describing registries of base registriesin Europe.</dct:abstract>
+        <cc:attributionName xml:lang="en">European Commission</cc:attributionName>
+        <rdfs:comment xml:lang="en">This document specifies the set of RDF classes and properties used in the BRegDCAT Application profile.</rdfs:comment>
+        <owl:versionInfo>2.0.0</owl:versionInfo>
+        <dct:publisher rdf:resource="http://publications.europa.eu/resource/authority/corporate-body/DIGIT"/>
+        <cc:attributionURL rdf:resource="http://ec.europa.eu/"/>
+        <dct:relation rdf:resource="http://data.europa.eu/w21/6be4d036-2e6d-4528-a888-0e9a0e29c579"/>
+        <dct:license>
+          <rdf:Description rdf:about="https://creativecommons.org/licenses/by/4.0/">
+            <dct:title>Attribution 4.0 International (CC BY 4.0)</dct:title>
+            <cc:attributionName>European Commission</cc:attributionName>
+            <cc:attributionURL rdf:resource="http://ec.europa.eu/"/>
+          </rdf:Description>
+        </dct:license>
+        <dct:creator rdf:parseType="Resource">
+          <rdfs:seeAlso rdf:resource="http://www.linkedin.com/in/espinr/"/>
+          <foaf:name>Martin Alvarez-Espinar</foaf:name>
+          <foaf:homepage rdf:resource="http://espinr.es/me"/>
+          <schema:affiliation rdf:parseType="Resource">
+            <foaf:name>CTIC</foaf:name>
+            <foaf:homepage rdf:resource="http://ctic.es"/>
+          </schema:affiliation>
+        </dct:creator>    
+    </owl:Ontology>
+
+<!-- dcat:Catalog   -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#Catalog">
+    	<dct:identifier>dcat:Catalog</dct:identifier>
+    	<rdfs:label xml:lang="en">Registry Catalogue</rdfs:label>
+    </rdf:Description>
+
+
+<!-- foaf:Agent   -->
+    <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/Agent">
+    	<dct:identifier>foaf:Agent</dct:identifier>
+    	<rdfs:label xml:lang="en">Agent</rdfs:label>
+    </rdf:Description>
+
+<!-- rdfs:Literal   -->
+    <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Literal">
+    	<dct:identifier>rdfs:Literal</dct:identifier>
+    	<rdfs:label xml:lang="en">Literal</rdfs:label>
+    </rdf:Description>
+
+<!-- rdfs:Resource   -->
+    <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource">
+    	<dct:identifier>rdfs:Resource</dct:identifier>
+    	<rdfs:label xml:lang="en">Resource</rdfs:label>
+    </rdf:Description>
+
+<!-- dcat:Dataset   -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#Dataset">
+    	<dct:identifier>dcat:Dataset</dct:identifier>
+    	<rdfs:label xml:lang="en">Dataset</rdfs:label>
+    </rdf:Description>
+
+<!-- dcat:DataService -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#DataService">
+    	<dct:identifier>dcat:DataService</dct:identifier>
+    	<rdfs:label xml:lang="en">Data Service</rdfs:label>
+    </rdf:Description>
+    
+<!-- skos:Concept<-->
+    <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#Concept">
+    	<dct:identifier>skos:Concept</dct:identifier>
+    	<rdfs:label xml:lang="en">Category, Publisher type, Status </rdfs:label>
+    </rdf:Description>
+    
+    
+<!-- dcat:Distribution -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#Distribution">
+    	<dct:identifier>dcat:Distribution</dct:identifier>
+    	<rdfs:label xml:lang="en">Distribution</rdfs:label>
+    </rdf:Description>
+
+<!-- dct:LicenseDocument -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/LicenseDocument">
+    	<dct:identifier>dct:LicenseDocument</dct:identifier>
+    	<rdfs:label xml:lang="en">Licence Document</rdfs:label>
+    </rdf:Description>
+    
+<!-- skos:ConceptScheme -->
+    <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#ConceptScheme">
+    	<dct:identifier>skos:ConceptScheme</dct:identifier>
+    	<rdfs:label xml:lang="en">Category scheme</rdfs:label>
+    </rdf:Description>
+
+<!-- eli:LegalResource -->
+    <rdf:Description rdf:about="http://data.europa.eu/eli/ontology#LegalResource">
+    	<dct:identifier>eli:LegalResource</dct:identifier>
+              <rdfs:label xml:lang="en">Legal Resource</rdfs:label>
+    </rdf:Description>
+    
+<!-- cpsv:Rule -->
+    <rdf:Description rdf:about="http://purl.org/vocab/cpsv#Rule">
+    	<dct:identifier>cpsv:Rule</dct:identifier>
+    	<rdfs:label xml:lang="en">Rule</rdfs:label>
+    </rdf:Description>
+
+<!-- cv:PublicOrganisation -->
+    <rdf:Description rdf:about="http://data.europa.eu/m8g/PublicOrganisation">
+    	<dct:identifier>cv:PublicOrganisation</dct:identifier>
+    	<rdfs:label xml:lang="en">Public Organisation</rdfs:label>
+    </rdf:Description>
+
+<!-- cpsv:PublicService -->
+    <rdf:Description rdf:about="http://purl.org/vocab/cpsv#PublicService">
+    	<dct:identifier>cpsv:PublicService</dct:identifier>
+    	<rdfs:label xml:lang="en">Public Registry Service</rdfs:label>
+    </rdf:Description>
+
+<!-- dcat:CatalogRecord  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#CatalogRecord">
+    	<dct:identifier>dcat:CatalogRecord</dct:identifier>
+    	<rdfs:label xml:lang="en">Catalogue Record</rdfs:label>
+    </rdf:Description>
+
+<!-- spdx:Checksum -->
+    <rdf:Description rdf:about="http://spdx.org/rdf/terms#Checksum">
+    	<dct:identifier>spdx:Checksum</dct:identifier>
+    	<rdfs:label xml:lang="en">Checksum</rdfs:label>
+    </rdf:Description>
+    
+<!-- foaf:Document -->
+    <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/Document">
+    	<dct:identifier>foaf:Document</dct:identifier>
+    	<rdfs:label xml:lang="en">Document</rdfs:label>
+    </rdf:Description>
+
+<!-- dct:Frequency -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/Frequency">
+    	<dct:identifier>dct:Frequency</dct:identifier>
+    	<rdfs:label xml:lang="en">Frequency</rdfs:label>
+    </rdf:Description>
+    
+<!-- adms:Identifier  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/adms#Identifier">
+    	<dct:identifier>adms:Identifier</dct:identifier>
+    	<rdfs:label xml:lang="en">Identifier</rdfs:label>
+    </rdf:Description>
+
+<!-- vcard:Kind -->
+    <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Kind">
+    	<dct:identifier>vcard:Kind</dct:identifier>
+    	<rdfs:label xml:lang="en">Kind</rdfs:label>
+    </rdf:Description>
+
+<!-- dct:LinguisticSystem -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/LinguisticSystem">
+    	<dct:identifier>dct:LinguisticSystem</dct:identifier>
+    	<rdfs:label xml:lang="en">Linguistic system</rdfs:label>
+    </rdf:Description>
+
+<!-- dct:Location -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/Location">
+    	<dct:identifier>dct:Location</dct:identifier>
+    	<rdfs:label xml:lang="en">Location</rdfs:label>
+    </rdf:Description>
+
+<!-- dct:MediaType -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/MediaType">
+    	<dct:identifier>dct:MediaType</dct:identifier>
+    	<rdfs:label xml:lang="en">Media type </rdfs:label>
+    </rdf:Description>
+
+<!-- dct:PeriodOfTime  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/PeriodOfTime">
+    	<dct:identifier>dct:PeriodOfTime</dct:identifier>
+    	<rdfs:label xml:lang="en">Period of time</rdfs:label>
+    </rdf:Description>
+
+<!-- dct:RightsStatement -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/RightsStatement">
+    	<dct:identifier>dct:RightsStatement</dct:identifier>
+    	<rdfs:label xml:lang="en">Rights statement</rdfs:label>
+    </rdf:Description>
+
+<!-- dct:ProvenanceStatement -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/ProvenanceStatement">
+    	<dct:identifier>dct:ProvenanceStatement</dct:identifier>
+    	<rdfs:label xml:lang="en">Provenance Statement</rdfs:label>
+    </rdf:Description>
+    
+<!-- dct:Standard -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/Standard">
+    	<dct:identifier>dct:Standard</dct:identifier>
+    	<rdfs:label xml:lang="en">Standard</rdfs:label>
+    </rdf:Description>
+
+<!-- schema:ContactPoint -->
+    <rdf:Description rdf:about="http://schema.org/ContactPoint">
+    	<dct:identifier>schema:ContactPoint</dct:identifier>
+    	<rdfs:label xml:lang="en">Contact Point</rdfs:label>
+    </rdf:Description>
+    
+<!-- dqv:QualityAnnotation -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dqv#QualityAnnotation">
+    	<dct:identifier>dqv:QualityAnnotation</dct:identifier>
+    	<rdfs:label xml:lang="en">Quality Annotation</rdfs:label>
+    </rdf:Description>
+
+<!-- dqv:QualityMeasurement -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dqv#QualityMeasurement">
+    	<dct:identifier>dqv:QualityMeasurement</dct:identifier>
+    	<rdfs:label xml:lang="en">Quality Measurement</rdfs:label>
+    </rdf:Description>
+
+<!-- prov:Activity -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/prov#Activity">
+    	<dct:identifier>prov:Activity</dct:identifier>
+    	<rdfs:label xml:lang="en">Activity</rdfs:label>
+    </rdf:Description>
+
+    <!-- locn:Address -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/locn#Address"> 
+    	<dct:identifier>locn:Address</dct:identifier>
+    	<rdfs:label xml:lang="en">Address</rdfs:label>
+    </rdf:Description>
+
+    
+<!-- ####################################### -->
+<!-- ##===================================## -->
+<!-- ##==          PROPERTIES           ==## -->
+<!-- ##===================================## --> 
+<!-- ####################################### -->
+    
+
+<!-- ====================================== -->
+<!-- ==        Agent - Properties        == -->
+<!-- ====================================== -->  
+ 
+<!--  Agent - name   -->
+     <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/name"> 
+        <dct:identifier>foaf:name</dct:identifier>
+        <rdfs:label xml:lang="en">Agent - name</rdfs:label>
+     </rdf:Description>
+
+<!--  Agent - identifier   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/identifier"> 
+        <dct:identifier>dct:identifier</dct:identifier>
+        <rdfs:label xml:lang="en">Agent - identifier</rdfs:label>
+     </rdf:Description>
+    
+<!--  Agent - type  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/type"> 
+        <dct:identifier>dct:type</dct:identifier>
+        <rdfs:label xml:lang="en">Agent - type</rdfs:label>
+     </rdf:Description>
+    
+
+<!-- ====================================== -->
+<!-- ==  Catalogue Record - Properties   == -->
+<!-- ====================================== --> 
+ 
+<!--  Catalogue Record - primary topic   -->
+     <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/primaryTopic"> 
+        <dct:identifier>foaf:primaryTopic</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - primary topic</rdfs:label>
+     </rdf:Description>
+
+<!--  Catalogue Record - update/modification date   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/modified"> 
+        <dct:identifier>dct:modified</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - last update</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Catalogue Record - listing date   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/issued"> 
+        <dct:identifier>dct:issued</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - release date</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Catalogue Record - status   -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/adms#status"> 
+        <dct:identifier>adms:status</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - status</rdfs:label>
+    </rdf:Description>
+
+<!--  Catalogue Record - application profile -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/conformsTo"> 
+        <dct:identifier>dct:conformsTo</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - application profile</rdfs:label>
+    </rdf:Description> 
+ 
+<!--  Catalogue Record - description  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/description"> 
+        <dct:identifier>dct:description</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - description</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Catalogue Record - title  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - title</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Catalogue Record - language  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/language"> 
+        <dct:identifier>dct:language</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - language</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Catalogue Record - source metadata -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/source"> 
+        <dct:identifier>dct:source</dct:identifier>
+        <rdfs:label xml:lang="en">Catalogue Record - source metadata</rdfs:label>
+    </rdf:Description>
+
+    
+<!-- ====================================== -->
+<!-- ==     Checksum - Properties        == --> 
+<!-- ====================================== -->
+
+<!--  Checksum - algorithm   -->
+    <rdf:Description rdf:about="http://spdx.org/rdf/terms#algorithm"> 
+        <dct:identifier>spdx:algorithm</dct:identifier>
+        <rdfs:label xml:lang="en">Checksum - algorithm</rdfs:label>
+    </rdf:Description>
+
+<!--  Checksum - checksum value   -->
+    <rdf:Description rdf:about="http://spdx.org/rdf/terms#checksumValue"> 
+        <dct:identifier>spdx:checksumValue</dct:identifier>
+        <rdfs:label xml:lang="en">Checksum - checksum value</rdfs:label>
+    </rdf:Description>
+
+
+<!-- ====================================== -->
+<!-- == Data Service - Properties        == -->
+<!-- ====================================== -->
+
+<!-- Data Service - endpoint URL   -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#endpointURL"> 
+        <dct:identifier>dcat:endpointURL</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - endpoint URL </rdfs:label>
+    </rdf:Description>
+
+<!--  Data Service - identifier  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/identifier"> 
+        <dct:identifier>dct:identifier</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - identifier</rdfs:label>
+    </rdf:Description>
+    
+<!--  Data Service - title  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - title</rdfs:label>
+    </rdf:Description>
+
+<!-- Data Service - serves dataset   -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#servesdataset"> 
+        <dct:identifier>dcat:servesDataset</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - serves dataset</rdfs:label>
+    </rdf:Description>
+
+<!-- Data Service -  endpoint description -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#endpointDescription"> 
+        <dct:identifier>dcat:endpointDescription</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - endpoint description</rdfs:label>
+    </rdf:Description>
+    
+<!-- Data Service - keyword/ tag  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#keyword"> 
+        <dct:identifier>dcat:keyword</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - keyword/ tag</rdfs:label>
+    </rdf:Description>
+ 
+<!-- Data Service - publisher  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/publisher"> 
+        <dct:identifier>dct:publisher</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - publisher</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Data Service - theme/category  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#theme"> 
+        <dct:identifier>dcat:theme</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - theme/category</rdfs:label>
+    </rdf:Description>
+
+<!-- Data Service - dct:description  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/description">
+    	<dct:identifier>dct:description</dct:identifier>
+    	<rdfs:label xml:lang="en">Data Service - description</rdfs:label>
+    </rdf:Description>
+
+<!-- Data Service - licence -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/license"> 
+        <dct:identifier>dct:license</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - licence</rdfs:label>
+    </rdf:Description>
+
+<!-- Data Service -  access rights -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/accessRights"> 
+        <dct:identifier>dct:accessRights</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - access rights</rdfs:label>
+    </rdf:Description>
+    
+<!--  Data Service - conforms to  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/conformsTo"> 
+        <dct:identifier>dct:conformsTo</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - conforms to</rdfs:label>
+    </rdf:Description>
+
+<!--  Data Service - follows  -->
+    <rdf:Description rdf:about="http://purl.org/vocab/cpsv#follows"> 
+        <dct:identifier>cpsv:follows</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - follows</rdfs:label>
+    </rdf:Description>
+    
+<!--  Data Service - landing page   -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#landingPage"> 
+        <dct:identifier>dcat:landingPage</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - landing page</rdfs:label>
+    </rdf:Description>
+
+<!--  Data Service - page (documentation)   -->
+    <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/page"> 
+        <dct:identifier>foaf:page</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - page (documentation)</rdfs:label>
+    </rdf:Description>
+
+<!--  Data Service - type  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/type"> 
+        <dct:identifier>dct:type</dct:identifier>
+        <rdfs:label xml:lang="en">Data Service - type</rdfs:label>
+    </rdf:Description>
+
+<!-- ====================================== -->
+<!-- ==       Dataset - Properties       == -->
+<!-- ====================================== --> 
+
+<!--  Dataset - description  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/description"> 
+        <dct:identifier>dct:description</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - description</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - identifier  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/identifier"> 
+        <dct:identifier>dct:identifier</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - identifier</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - title  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - title</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - contact point -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#contactPoint"> 
+        <dct:identifier>dcat:contactPoint</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - contact point</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Dataset - dataset distribution  -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#distribution"> 
+        <dct:identifier>dcat:distribution</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - dataset distribution</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Dataset - keyword/ tag  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#keyword"> 
+        <dct:identifier>dcat:keyword</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - keyword/ tag</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Dataset - publisher  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/publisher"> 
+        <dct:identifier>dct:publisher</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - publisher</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Dataset - spatial/geographical coverage   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/spatial"> 
+        <dct:identifier>dct:spatial</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - spatial/ geographical coverage</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - theme/category  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#theme"> 
+        <dct:identifier>dcat:theme</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - theme/category</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Dataset - temporal coverage   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/temporal"> 
+        <dct:identifier>dct:temporal</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - temporal coverage</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - access rights   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/accessRights"> 
+        <dct:identifier>dct:accessRights</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - access Rights</rdfs:label>
+     </rdf:Description>
+    
+<!--  Dataset - conforms to  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/conformsTo"> 
+        <dct:identifier>dct:conformsTo</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - conforms to</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Dataset - accrual periodicity   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/acrualPeriodicity"> 
+        <dct:identifier>dct:accrualPeriodicity</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - accrual periodicity</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Dataset  - creator  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/creator"> 
+        <dct:identifier>dct:creator</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - creator</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - follows  -->
+    <rdf:Description rdf:about="http://purl.org/vocab/cpsv#follows"> 
+        <dct:identifier>cpsv:follows</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - follows</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Dataset - has part   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/hasPart"> 
+        <dct:identifier>dct:hasPart</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - has part</rdfs:label>
+     </rdf:Description> 
+
+<!--  Dataset - is part of   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/isPartOf"> 
+        <dct:identifier>dct:isPartOf</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - is part of</rdfs:label>
+     </rdf:Description> 
+    
+<!--  Dataset - has quality annotation   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dqv#hasQualityAnnotation"> 
+        <dct:identifier>dqv:hasQualityAnnotation</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - has quality annotation</rdfs:label>
+     </rdf:Description> 
+    
+<!--  Dataset - has quality measurement   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dqv#hasQualityMeasurement"> 
+        <dct:identifier>dqv:hasQualityMeasurement</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - has quality measurement</rdfs:label>
+     </rdf:Description> 
+
+<!--  Dataset - is Version Of   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/isVersionOf"> 
+        <dct:identifier>dct:isVersionOf</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - is Version Of</rdfs:label>
+     </rdf:Description> 
+ 
+<!--  Dataset - has Version   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/hasVersion"> 
+        <dct:identifier>dct:hasVersion</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - has Version</rdfs:label>
+     </rdf:Description> 
+
+<!--  Dataset  - is referenced by -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/isReferencedBy"> 
+        <dct:identifier>dct:isReferencedBy</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - is referenced By </rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset  - is replaced by -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/isReplacedBy"> 
+        <dct:identifier>dct:isReplacedBy</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - is replaced By </rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset  - is required by -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/isRequiredBy"> 
+        <dct:identifier>dct:isRequiredBy</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - is required By </rdfs:label>
+     </rdf:Description>
+    
+<!--  Dataset - landing page  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#landingPage"> 
+        <dct:identifier>dcat:landingPage</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - landing page</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Dataset - issued   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/issued"> 
+        <dct:identifier>dct:issued</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - issued</rdfs:label>
+     </rdf:Description>    
+    
+<!--  Dataset - language   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/language"> 
+        <dct:identifier>dct:language</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - language</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Dataset - update/modification date   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/modified"> 
+        <dct:identifier>dct:modified</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - update/ modification date</rdfs:label>
+     </rdf:Description>
+    
+<!--  Dataset - other identifier   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/adms#identifier"> 
+        <dct:identifier>adms:identifier</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - other identifier</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Dataset - page (documentation)   -->
+    <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/page"> 
+        <dct:identifier>foaf:page</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - page (documentation)</rdfs:label>
+    </rdf:Description>
+ 
+<!--  Dataset - provenance   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/provenance"> 
+        <dct:identifier>dct:provenance</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - provenance</rdfs:label>
+     </rdf:Description> 
+
+<!--  Dataset  - qualified attribution -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/prov#qualifiedAttribution"> 
+        <dct:identifier>prov:qualifiedAttribution</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - qualified attribution</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset  - qualified Relation -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#qualifiedRelation"> 
+        <dct:identifier>dcat:qualifiedRelation</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - qualified relation</rdfs:label>
+    </rdf:Description>
+
+<!--  Dataset - references   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/references"> 
+        <dct:identifier>dct:references</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - references</rdfs:label>
+     </rdf:Description>  
+
+<!--  Dataset - related resource   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/relation"> 
+        <dct:identifier>dct:relation</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - related resource</rdfs:label>
+     </rdf:Description>  
+
+<!--  Dataset - replaces   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/replaces"> 
+        <dct:identifier>dct:replaces</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - replaces</rdfs:label>
+     </rdf:Description>  
+
+<!--  Dataset - requires   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/requires"> 
+        <dct:identifier>dct:requires</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - requires</rdfs:label>
+     </rdf:Description>  
+
+<!--  Dataset - sample   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/adms#sample"> 
+        <dct:identifier>adms:sample</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - sample</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - source   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/source"> 
+        <dct:identifier>dct:source</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - source </rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset - type   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/type"> 
+        <dct:identifier>dct:type</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - type </rdfs:label>
+     </rdf:Description> 
+ 
+<!--  Dataset  - spatial resolution -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#spatialResolutionInMeters"> 
+        <dct:identifier>dcat:spatialResolutionInMeters</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - spatial resolution (meters)</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset  -  temporal resolution -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#temporalResolution"> 
+        <dct:identifier>dcat:temporalResolution</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - temporal resolution</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Dataset - version   -->
+     <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#versionInfo"> 
+        <dct:identifier>owl:versionInfo</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - version</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Dataset - version notes   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/adms#versionNotes"> 
+        <dct:identifier>adms:versionNotes</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - version notes</rdfs:label>
+     </rdf:Description>
+
+<!--  Dataset  -  was generated by -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/prov#wasGeneratedBy"> 
+        <dct:identifier>prov:wasGeneratedBy</dct:identifier>
+        <rdfs:label xml:lang="en">Dataset - was generated by</rdfs:label>
+     </rdf:Description>
+
+<!-- ====================================== -->
+<!-- ==    Distribution - Properties     == -->
+<!-- ====================================== -->  
+ 
+<!--  Distribution - access URL   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#accessURL">
+        <dct:identifier>dcat:accessURL</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - access URL</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Distribution - availability  -->
+     <rdf:Description rdf:about="http://data.europa.eu/r5r/availability">
+        <dct:identifier>dcatap:availability</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - availability</rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution - description   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/description"> 
+        <dct:identifier>dct:description</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - description</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Distribution - format   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/format"> 
+        <dct:identifier>dct:format</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - format</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Distribution - licence   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/license"> 
+        <dct:identifier>dct:license</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - licence</rdfs:label>
+     </rdf:Description>
+ 
+<!--   Distribution -  access service -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#accessService"> 
+        <dct:identifier>dcat:accessService </dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - access service</rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution - byte size   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#byteSize"> 
+        <dct:identifier>dcat:byteSize</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - byte size</rdfs:label>
+     </rdf:Description>
+     
+<!--  Distribution - download URL   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#downloadURL">
+        <dct:identifier>dcat:downloadURL</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - download URL</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Distribution - media type   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/mediaType"> 
+        <dct:identifier>dcat:mediaType</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - media type</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Distribution - checksum   -->
+     <rdf:Description rdf:about="http://spdx.org/rdf/terms#checksum"> 
+        <dct:identifier>spdx:checksum</dct:identifier>
+        <rdfs:label xml:lang="en">distribution - checksum</rdfs:label>
+     </rdf:Description>
+
+<!--   Distribution -  compression format  -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#compressFormat"> 
+        <dct:identifier>dcat:compressFormat</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - compression format</rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution -  has policy -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/odrl/2/hasPolicy"> 
+        <dct:identifier>odrl:hasPolicy</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - has policy</rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution - issued  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/issued"> 
+        <dct:identifier>dct:issued</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - issued</rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution - update/modification date   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/modified"> 
+        <dct:identifier>dct:modified</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - update/modification date</rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution - language   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/language"> 
+        <dct:identifier>dct:language</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - language</rdfs:label>
+     </rdf:Description> 
+
+<!--  Distribution - linked schemas   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/conformsTo"> 
+        <dct:identifier>dct:conformsTo</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - linked schemas</rdfs:label>
+     </rdf:Description>
+
+<!--   Distribution - packaging format  -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#packageFormat"> 
+        <dct:identifier>dcat:packageFormat</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - packaging format</rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution - page (documentation)   -->
+     <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/page"> 
+        <dct:identifier>foaf:page</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - page (documentation)</rdfs:label>
+     </rdf:Description>
+
+    
+<!--  Distribution - rights   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/rights"> 
+        <dct:identifier>dct:rights</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - rights</rdfs:label>
+     </rdf:Description>
+ 
+<!--   Distribution -  spatial resolution (meters) -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#spatialResolutionInMeters"> 
+        <dct:identifier>dcat:spatialResolutionInMeters</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - spatial resolution (meters) </rdfs:label>
+     </rdf:Description>
+
+<!--  Distribution - status   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/adms#status"> 
+        <dct:identifier>adms:status</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - status</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Distribution - title   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - title</rdfs:label>
+     </rdf:Description>
+
+<!--   Distribution -  temporal resolution  -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#temporalResolution"> 
+        <dct:identifier>dcat:temporalResolution </dct:identifier>
+        <rdfs:label xml:lang="en">Distribution - temporal resolution</rdfs:label>
+     </rdf:Description>
+
+
+<!-- ====================================== -->
+<!-- ==    Identifier - Properties       == -->
+<!-- ====================================== -->  
+ 
+<!--  Identifier - notation   -->
+     <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#notation"> 
+        <dct:identifier>skos:notation</dct:identifier>
+        <rdfs:label xml:lang="en">Identifier - notation</rdfs:label>
+     </rdf:Description>
+ 
+
+<!-- ====================================== -->
+<!-- ==    Legal Resource - Properties   == -->
+<!-- ====================================== -->  
+ 
+<!--  Legal Resource - type   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/type"> 
+        <dct:identifier>dct:type</dct:identifier>
+        <rdfs:label xml:lang="en">Legal Resource - type</rdfs:label>
+     </rdf:Description>
+    
+<!-- Legal Resource - description  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/description">
+    	<dct:identifier>dct:description</dct:identifier>
+    	<rdfs:label xml:lang="en">Legal Resource - description</rdfs:label>
+    </rdf:Description>
+
+<!-- Legal Resource - identifier  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/identifier">
+    	<dct:identifier>dct:identifier</dct:identifier>
+    	<rdfs:label xml:lang="en">Legal Resource - identifier</rdfs:label>
+    </rdf:Description>
+
+<!-- Legal Resource - reference  -->
+    <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso">
+    	<dct:identifier>rdfs:seeAlso</dct:identifier>
+    	<rdfs:label xml:lang="en">Legal Resource - reference</rdfs:label>
+    </rdf:Description>
+
+<!-- Legal Resource - related resource  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/relation">
+    	<dct:identifier>dct:relation</dct:identifier>
+    	<rdfs:label xml:lang="en">Legal Resource - related resource</rdfs:label>
+    </rdf:Description>
+
+
+<!-- ====================================== --> 
+<!-- ==   Licence Document - Properties  == --> 
+<!-- ====================================== --> 
+ 
+<!--  Licence Document - licence type   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/type"> 
+        <dct:identifier>dct:type</dct:identifier>
+        <rdfs:label xml:lang="en">Licence Document - licence type</rdfs:label>
+     </rdf:Description>
+
+    
+<!-- ====================================== --> 
+<!-- ==   Location - Properties    == --> 
+<!-- ====================================== --> 
+
+<!--  Location - geometry -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/locn#geometry"> 
+        <dct:identifier>locn:geometry</dct:identifier>
+        <rdfs:label xml:lang="en">Location - geometry</rdfs:label>
+     </rdf:Description>
+
+<!--  Location-  bounding box -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#bbox"> 
+        <dct:identifier> dcat:bbox</dct:identifier>
+        <rdfs:label xml:lang="en">Location - bounding box </rdfs:label>
+     </rdf:Description>
+
+<!--  Location- centroid -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#centroid"> 
+        <dct:identifier>dcat:centroid</dct:identifier>
+        <rdfs:label xml:lang="en">Location - centroid</rdfs:label>
+     </rdf:Description>
+
+    
+<!-- ====================================== --> 
+<!-- ==   Period Of Time - Properties    == --> 
+<!-- ====================================== --> 
+
+<!--  Period Of Time - start date  -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#startDate"> 
+        <dct:identifier>dcat:startDate</dct:identifier>
+        <rdfs:label xml:lang="en">Period Of Time - start date</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Period Of Time - end date  -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#endDate"> 
+        <dct:identifier>dcat:endDate</dct:identifier>
+        <rdfs:label xml:lang="en">Period Of Time - end date</rdfs:label>
+     </rdf:Description>
+
+<!--  Period Of Time - beginning -->
+     <rdf:Description rdf:about="http://www.w3.org/TR/owl-time/#time:hasBeginning"> 
+        <dct:identifier>time:hasBeginning</dct:identifier>
+        <rdfs:label xml:lang="en">Period Of Time - beginning</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Period Of Time - end  -->
+     <rdf:Description rdf:about="http://www.w3.org/TR/owl-time/#time:hasEnd"> 
+        <dct:identifier>time:hasEnd</dct:identifier>
+        <rdfs:label xml:lang="en">Period Of Time - end</rdfs:label>
+     </rdf:Description>
+
+
+<!-- ========================================= --> 
+<!-- ==   Public Organisation - Properties  == --> 
+<!-- ========================================= --> 
+ 
+<!--  Public Organisation - identifier   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/identifier"> 
+        <dct:identifier>dct:identifier</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - identifier</rdfs:label>
+     </rdf:Description>
+     
+<!--  Public Organisation - name   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - name</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Public Organisation - spatial coverage   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/spatial"> 
+        <dct:identifier>dct:spatial</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - spatial coverage</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Public Organisation - preferred label   -->
+     <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel"> 
+        <dct:identifier>skos:prefLabel</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - preferred label</rdfs:label>
+     </rdf:Description>
+    
+<!--  Public Organisation - address -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/locn#address"> 
+        <dct:identifier>locn:address</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - address</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Organisation - classification -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/org#classification"> 
+        <dct:identifier>org:classification</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - classification</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Organisation - homepage  -->
+     <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/homepage"> 
+        <dct:identifier>foaf:homepage</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - homepage</rdfs:label>
+     </rdf:Description>
+
+    
+<!-- ============================================= --> 
+<!-- ==   Public Registry Service - Properties  == --> 
+<!-- ============================================= --> 
+ 
+<!--  Public Registry Service - description   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/description"> 
+        <dct:identifier>dct:description</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - description</rdfs:label>
+     </rdf:Description>
+    
+<!--  Public Registry Service - identifier   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/identifier"> 
+        <dct:identifier>dct:identifier</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - identifier</rdfs:label>
+     </rdf:Description>
+    
+<!--  Public Registry Service - title   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - title</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Registry Service - has competent authority   -->
+     <rdf:Description rdf:about="http://data.europa.eu/m8g/hasCompetentAuthority"> 
+        <dct:identifier>cv:hasCompetentAuthority</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - has competent authority</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Registry Service - has part   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/hasPart"> 
+        <dct:identifier>dct:hasPart</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - has part</rdfs:label>
+     </rdf:Description>
+    
+<!--  Public Registry Service - homepage  -->
+     <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/homepage"> 
+        <dct:identifier>foaf:homepage</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - homepage</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Registry Service - is part of   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/isPartOf"> 
+        <dct:identifier>dct:isPartOf</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - is part of</rdfs:label>
+     </rdf:Description>
+    
+<!--  Public Registry Service - produces   -->
+     <rdf:Description rdf:about="http://purl.org/vocab/cpsv#produces"> 
+        <dct:identifier>cpsv:produces</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - produces</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Registry Service - spatial coverage   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/spatial"> 
+        <dct:identifier>dct:spatial</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - spatial coverage</rdfs:label>
+     </rdf:Description>
+    
+<!--  Public Registry Service - status   -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/adms#status"> 
+        <dct:identifier>adms:status</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - status</rdfs:label>
+    </rdf:Description>
+    
+<!--  Public Registry Service - thematic area  -->
+    <rdf:Description rdf:about="http://data.europa.eu/m8g/thematicArea"> 
+        <dct:identifier>cv:thematicArea</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - thematic area</rdfs:label>
+    </rdf:Description>
+
+<!--  Public Registry Service - type   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/type"> 
+        <dct:identifier>dct:type</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - type</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Registry Service - follows   -->
+     <rdf:Description rdf:about="http://purl.org/vocab/cpsv#follows"> 
+        <dct:identifier>cpsv:follows</dct:identifier>
+        <rdfs:label xml:lang="en">Public Registry Service - follows</rdfs:label>
+     </rdf:Description>
+
+<!--  Public Registry Service - has contact point   -->
+     <rdf:Description rdf:about="http://data.europa.eu/m8g/hasContactPoint"> 
+        <dct:identifier>cv:hasContactPoint</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - has contact point</rdfs:label>
+     </rdf:Description>
+    
+<!--  Public Registry Service - has legal resource   -->
+     <rdf:Description rdf:about="http://data.europa.eu/m8g/hasLegalResouce"> 
+        <dct:identifier>cv:hasLegalResouce</dct:identifier>
+        <rdfs:label xml:lang="en">Public Organisation - has legal resource</rdfs:label>
+     </rdf:Description>
+    
+    
+<!-- ======================================== -->
+<!-- ==  Registry Catalogue - Properties   == -->
+<!-- ======================================== --> 
+    
+<!-- Registry Catalogue - dct:description  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/description">
+    	<dct:identifier>dct:description</dct:identifier>
+    	<rdfs:label xml:lang="en">Registry Catalogue - description</rdfs:label>
+    </rdf:Description>
+
+<!-- Registry Catalogue - dct:identifier  -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/identifier">
+    	<dct:identifier>dct:identifier</dct:identifier>
+    	<rdfs:label xml:lang="en">Registry Catalogue - identifier</rdfs:label>
+    </rdf:Description>
+
+<!-- Registry Catalogue - dct:publisher -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/publisher">
+    	<dct:identifier>dct:publisher</dct:identifier>
+    	<rdfs:label xml:lang="en">Registry Catalogue - publisher</rdfs:label>
+    </rdf:Description>
+
+<!-- Registry Catalogue - dct:title -->
+    <rdf:Description rdf:about="http://purl.org/dc/terms/title">
+    	<dct:identifier>dct:title</dct:identifier>
+    	<rdfs:label xml:lang="en">Registry Catalogue - title</rdfs:label>
+    </rdf:Description>
+    
+<!--  Registry Catalogue - accrual periodicity   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/acrualPeriodicity"> 
+        <dct:identifier>dct:accrualPeriodicity</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - accrual periodicity</rdfs:label>
+     </rdf:Description>
+    
+<!-- Registry Catalogue - dcat:dataset  -->
+    <rdf:Description rdf:about="http://www.w3.org/ns/dcat#dataset">
+    	<dct:identifier>dcat:dataset</dct:identifier>
+    	<rdfs:label xml:lang="en">Registry Catalogue - dataset</rdfs:label>
+    </rdf:Description>
+
+<!--  Data Catalogue - homepage  -->
+     <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/homepage"> 
+        <dct:identifier>foaf:homepage</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - homepage</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Data Catalogue - language   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/language"> 
+        <dct:identifier>dct:language</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - language</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Data Catalogue - licence   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/license"> 
+        <dct:identifier>dct:license</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - licence</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Data Catalogue - issued   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/issued"> 
+        <dct:identifier>dct:issued</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - issued</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Data Catalogue - update/modification date   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/modified"> 
+        <dct:identifier>dct:modified</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - update/ modification date</rdfs:label>
+     </rdf:Description>
+    
+<!--  Data Catalogue - theme taxonomy   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#themeTaxonomy"> 
+        <dct:identifier>dcat:themeTaxonomy</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - theme taxonomy</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Data Catalogue - provenance  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/provenance"> 
+        <dct:identifier>dct:provenance</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - provenance</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Data Catalogue - spatial coverage   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/spatial"> 
+        <dct:identifier>dct:spatial</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - spatial coverage</rdfs:label>
+     </rdf:Description>
+
+<!--  Catalog -  catalog -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#catalog"> 
+        <dct:identifier>dcat:catalog</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - catalog </rdfs:label>
+     </rdf:Description>
+
+<!--  Catalog -  creator -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/creator"> 
+        <dct:identifier>dct:creator</dct:identifier>
+        <rdfs:label xml:lang="en">Data Catalogue- creator</rdfs:label>
+     </rdf:Description>
+    
+<!--  Data Catalogue - has part  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/hasPart"> 
+        <dct:identifier>dct:hasPart</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - has part</rdfs:label>
+     </rdf:Description> 
+
+<!--  Data Catalogue - is part of  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/isPartOf"> 
+        <dct:identifier>dct:isPartOf</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - is part of</rdfs:label>
+     </rdf:Description>
+    
+<!--  Data Catalogue - record   -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#record"> 
+        <dct:identifier>dcat:record</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - record</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Data Catalogue - rights   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/rights"> 
+        <dct:identifier>dct:rights</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - rights</rdfs:label>
+     </rdf:Description>
+ 
+<!--  Catalog -  service  -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#service"> 
+        <dct:identifier>dcat:service</dct:identifier>
+        <rdfs:label xml:lang="en">Registry Catalogue - service</rdfs:label>
+     </rdf:Description>
+
+    
+<!-- ================================ -->
+<!-- == Relationship - Properties  == -->
+<!-- ================================ -->
+
+<!-- Relationship -  relation  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/relation"> 
+        <dct:identifier>dct:relation</dct:identifier>
+        <rdfs:label xml:lang="en">Relationship - relation</rdfs:label>
+     </rdf:Description>
+
+<!-- Relationship - had role -->
+     <rdf:Description rdf:about="http://www.w3.org/ns/dcat#hadRole"> 
+        <dct:identifier>dcat:hadRole</dct:identifier>
+        <rdfs:label xml:lang="en">Relationship - had role</rdfs:label>
+     </rdf:Description>
+
+
+<!-- ======================== -->
+<!-- == Rule - Properties  == -->
+<!-- ======================== -->
+
+<!-- Rule -  description  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/description"> 
+        <dct:identifier>dct:description</dct:identifier>
+        <rdfs:label xml:lang="en">Rule - description</rdfs:label>
+     </rdf:Description>
+
+<!-- Rule -  identifier  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/identifier"> 
+        <dct:identifier>dct:identifier</dct:identifier>
+        <rdfs:label xml:lang="en">Rule - identifier</rdfs:label>
+     </rdf:Description>
+
+<!-- Rule -  title  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Rule - title</rdfs:label>
+     </rdf:Description>
+
+<!-- Rule -  implements  -->
+     <rdf:Description rdf:about="http://purl.org/vocab/cpsv#implements"> 
+        <dct:identifier>cpsv:implements</dct:identifier>
+        <rdfs:label xml:lang="en">Rule - implements</rdfs:label>
+     </rdf:Description>
+
+<!-- Rule -  language  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/language"> 
+        <dct:identifier>dct:language</dct:identifier>
+        <rdfs:label xml:lang="en">Rule - language</rdfs:label>
+     </rdf:Description>
+
+<!-- Rule -  type  -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/type"> 
+        <dct:identifier>dct:type</dct:identifier>
+        <rdfs:label xml:lang="en">Rule - type</rdfs:label>
+     </rdf:Description>
+
+
+<!-- ====================================== --> 
+<!-- ==   Thematic Scheme - Properties   == --> 
+<!-- ====================================== --> 
+
+<!--  Category Scheme - title   -->
+     <rdf:Description rdf:about="http://purl.org/dc/terms/title"> 
+        <dct:identifier>dct:title</dct:identifier>
+        <rdfs:label xml:lang="en">Category Scheme - title</rdfs:label>
+     </rdf:Description>
+ 
+ 
+<!-- =================================== -->
+<!-- ==     Theme - Properties        == --> 
+<!-- =================================== -->
+ 
+<!--  Category - preferred label   -->
+     <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel"> 
+        <dct:identifier>skos:prefLabel</dct:identifier>
+        <rdfs:label xml:lang="en">Category - preferred label</rdfs:label>
+     </rdf:Description>
+
+
+
+</rdf:RDF>

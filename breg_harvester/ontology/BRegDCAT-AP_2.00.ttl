@@ -1,0 +1,531 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+
+<http://joinup.ec.europa.eu/collection/access-base-registries/solution/abr-specification-registry-registries>
+  a owl:Ontology ;
+  rdfs:label "BRegDCAT Application Profile for Base Registries in Europe"@en ;
+  dc:modified "2020-07-15"^^xsd:date ;
+  dc:abstract "BRegDCAT Application Profile for Base Registries in Europe is a specification based on the DCAT-AP and CPSV-AP vocabularies for describing registries of base registriesin Europe."@en ;
+  cc:attributionName "European Commission"@en ;
+  rdfs:comment "This document specifies the set of RDF classes and properties used in the BRegDCAT Application profile."@en ;
+  owl:versionInfo "2.0.0" ;
+  dc:publisher <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
+  cc:attributionURL <http://ec.europa.eu/> ;
+  dc:relation <http://data.europa.eu/w21/6be4d036-2e6d-4528-a888-0e9a0e29c579> ;
+  dc:license <https://creativecommons.org/licenses/by/4.0/> ;
+  dc:creator [
+    rdfs:seeAlso <http://www.linkedin.com/in/espinr/> ;
+    foaf:name "Martin Alvarez-Espinar" ;
+    foaf:homepage <http://espinr.es/me> ;
+    schema:affiliation [
+      foaf:name "CTIC" ;
+      foaf:homepage <http://ctic.es>
+    ]
+  ] .
+
+<https://creativecommons.org/licenses/by/4.0/>
+  dc:title "Attribution 4.0 International (CC BY 4.0)" ;
+  cc:attributionName "European Commission" ;
+  cc:attributionURL <http://ec.europa.eu/> .
+
+dcat:Catalog
+  dc:identifier "dcat:Catalog" ;
+  rdfs:label "Registry Catalogue"@en .
+
+foaf:Agent
+  dc:identifier "foaf:Agent" ;
+  rdfs:label "Agent"@en .
+
+rdfs:Literal
+  dc:identifier "rdfs:Literal" ;
+  rdfs:label "Literal"@en .
+
+rdfs:Resource
+  dc:identifier "rdfs:Resource" ;
+  rdfs:label "Resource"@en .
+
+dcat:Dataset
+  dc:identifier "dcat:Dataset" ;
+  rdfs:label "Dataset"@en .
+
+dcat:DataService
+  dc:identifier "dcat:DataService" ;
+  rdfs:label "Data Service"@en .
+
+skos:Concept
+  dc:identifier "skos:Concept" ;
+  rdfs:label "Category, Publisher type, Status "@en .
+
+dcat:Distribution
+  dc:identifier "dcat:Distribution" ;
+  rdfs:label "Distribution"@en .
+
+dc:LicenseDocument
+  dc:identifier "dct:LicenseDocument" ;
+  rdfs:label "Licence Document"@en .
+
+skos:ConceptScheme
+  dc:identifier "skos:ConceptScheme" ;
+  rdfs:label "Category scheme"@en .
+
+<http://data.europa.eu/eli/ontology#LegalResource>
+  dc:identifier "eli:LegalResource" ;
+  rdfs:label "Legal Resource"@en .
+
+<http://purl.org/vocab/cpsv#Rule>
+  dc:identifier "cpsv:Rule" ;
+  rdfs:label "Rule"@en .
+
+<http://data.europa.eu/m8g/PublicOrganisation>
+  dc:identifier "cv:PublicOrganisation" ;
+  rdfs:label "Public Organisation"@en .
+
+<http://purl.org/vocab/cpsv#PublicService>
+  dc:identifier "cpsv:PublicService" ;
+  rdfs:label "Public Registry Service"@en .
+
+dcat:CatalogRecord
+  dc:identifier "dcat:CatalogRecord" ;
+  rdfs:label "Catalogue Record"@en .
+
+<http://spdx.org/rdf/terms#Checksum>
+  dc:identifier "spdx:Checksum" ;
+  rdfs:label "Checksum"@en .
+
+foaf:Document
+  dc:identifier "foaf:Document" ;
+  rdfs:label "Document"@en .
+
+dc:Frequency
+  dc:identifier "dct:Frequency" ;
+  rdfs:label "Frequency"@en .
+
+<http://www.w3.org/ns/adms#Identifier>
+  dc:identifier "adms:Identifier" ;
+  rdfs:label "Identifier"@en .
+
+vcard:Kind
+  dc:identifier "vcard:Kind" ;
+  rdfs:label "Kind"@en .
+
+dc:LinguisticSystem
+  dc:identifier "dct:LinguisticSystem" ;
+  rdfs:label "Linguistic system"@en .
+
+dc:Location
+  dc:identifier "dct:Location" ;
+  rdfs:label "Location"@en .
+
+dc:MediaType
+  dc:identifier "dct:MediaType" ;
+  rdfs:label "Media type "@en .
+
+dc:PeriodOfTime
+  dc:identifier "dct:PeriodOfTime" ;
+  rdfs:label "Period of time"@en .
+
+dc:RightsStatement
+  dc:identifier "dct:RightsStatement" ;
+  rdfs:label "Rights statement"@en .
+
+dc:ProvenanceStatement
+  dc:identifier "dct:ProvenanceStatement" ;
+  rdfs:label "Provenance Statement"@en .
+
+dc:Standard
+  dc:identifier "dct:Standard" ;
+  rdfs:label "Standard"@en .
+
+schema:ContactPoint
+  dc:identifier "schema:ContactPoint" ;
+  rdfs:label "Contact Point"@en .
+
+<http://www.w3.org/ns/dqv#QualityAnnotation>
+  dc:identifier "dqv:QualityAnnotation" ;
+  rdfs:label "Quality Annotation"@en .
+
+<http://www.w3.org/ns/dqv#QualityMeasurement>
+  dc:identifier "dqv:QualityMeasurement" ;
+  rdfs:label "Quality Measurement"@en .
+
+prov:Activity
+  dc:identifier "prov:Activity" ;
+  rdfs:label "Activity"@en .
+
+<http://www.w3.org/ns/locn#Address>
+  dc:identifier "locn:Address" ;
+  rdfs:label "Address"@en .
+
+foaf:name
+  dc:identifier "foaf:name" ;
+  rdfs:label "Agent - name"@en .
+
+dc:identifier
+  dc:identifier "dct:identifier" ;
+  rdfs:label "Agent - identifier"@en, "Data Service - identifier"@en, "Dataset - identifier"@en, "Legal Resource - identifier"@en, "Public Organisation - identifier"@en, "Public Registry Service - identifier"@en, "Registry Catalogue - identifier"@en, "Rule - identifier"@en .
+
+dc:type
+  dc:identifier "dct:type" ;
+  rdfs:label "Agent - type"@en, "Data Service - type"@en, "Dataset - type "@en, "Legal Resource - type"@en, "Licence Document - licence type"@en, "Public Organisation - type"@en, "Rule - type"@en .
+
+foaf:primaryTopic
+  dc:identifier "foaf:primaryTopic" ;
+  rdfs:label "Catalogue Record - primary topic"@en .
+
+dc:modified
+  dc:identifier "dct:modified" ;
+  rdfs:label "Catalogue Record - last update"@en, "Dataset - update/ modification date"@en, "Distribution - update/modification date"@en, "Registry Catalogue - update/ modification date"@en .
+
+dc:issued
+  dc:identifier "dct:issued" ;
+  rdfs:label "Catalogue Record - release date"@en, "Dataset - issued"@en, "Distribution - issued"@en, "Registry Catalogue - issued"@en .
+
+<http://www.w3.org/ns/adms#status>
+  dc:identifier "adms:status" ;
+  rdfs:label "Catalogue Record - status"@en, "Distribution - status"@en, "Public Registry Service - status"@en .
+
+dc:conformsTo
+  dc:identifier "dct:conformsTo" ;
+  rdfs:label "Catalogue Record - application profile"@en, "Data Service - conforms to"@en, "Dataset - conforms to"@en, "Distribution - linked schemas"@en .
+
+dc:description
+  dc:identifier "dct:description" ;
+  rdfs:label "Catalogue Record - description"@en, "Data Service - description"@en, "Dataset - description"@en, "Distribution - description"@en, "Legal Resource - description"@en, "Public Registry Service - description"@en, "Registry Catalogue - description"@en, "Rule - description"@en .
+
+dc:title
+  dc:identifier "dct:title" ;
+  rdfs:label "Catalogue Record - title"@en, "Data Service - title"@en, "Dataset - title"@en, "Distribution - title"@en, "Public Organisation - name"@en, "Public Organisation - title"@en, "Registry Catalogue - title"@en, "Rule - title"@en, "Category Scheme - title"@en .
+
+dc:language
+  dc:identifier "dct:language" ;
+  rdfs:label "Catalogue Record - language"@en, "Dataset - language"@en, "Distribution - language"@en, "Registry Catalogue - language"@en, "Rule - language"@en .
+
+dc:source
+  dc:identifier "dct:source" ;
+  rdfs:label "Catalogue Record - source metadata"@en, "Dataset - source "@en .
+
+<http://spdx.org/rdf/terms#algorithm>
+  dc:identifier "spdx:algorithm" ;
+  rdfs:label "Checksum - algorithm"@en .
+
+<http://spdx.org/rdf/terms#checksumValue>
+  dc:identifier "spdx:checksumValue" ;
+  rdfs:label "Checksum - checksum value"@en .
+
+dcat:endpointURL
+  dc:identifier "dcat:endpointURL" ;
+  rdfs:label "Data Service - endpoint URL "@en .
+
+dcat:servesdataset
+  dc:identifier "dcat:servesDataset" ;
+  rdfs:label "Data Service - serves dataset"@en .
+
+dcat:endpointDescription
+  dc:identifier "dcat:endpointDescription" ;
+  rdfs:label "Data Service - endpoint description"@en .
+
+dcat:keyword
+  dc:identifier "dcat:keyword" ;
+  rdfs:label "Data Service - keyword/ tag"@en, "Dataset - keyword/ tag"@en .
+
+dc:publisher
+  dc:identifier "dct:publisher" ;
+  rdfs:label "Data Service - publisher"@en, "Dataset - publisher"@en, "Registry Catalogue - publisher"@en .
+
+dcat:theme
+  dc:identifier "dcat:theme" ;
+  rdfs:label "Data Service - theme/category"@en, "Dataset - theme/category"@en .
+
+dc:license
+  dc:identifier "dct:license" ;
+  rdfs:label "Data Service - licence"@en, "Distribution - licence"@en, "Registry Catalogue - licence"@en .
+
+dc:accessRights
+  dc:identifier "dct:accessRights" ;
+  rdfs:label "Data Service - access rights"@en, "Dataset - access Rights"@en .
+
+<http://purl.org/vocab/cpsv#follows>
+  dc:identifier "cpsv:follows" ;
+  rdfs:label "Data Service - follows"@en, "Dataset - follows"@en, "Public Registry Service - follows"@en .
+
+dcat:landingPage
+  dc:identifier "dcat:landingPage" ;
+  rdfs:label "Data Service - landing page"@en, "Dataset - landing page"@en .
+
+foaf:page
+  dc:identifier "foaf:page" ;
+  rdfs:label "Data Service - page (documentation)"@en, "Dataset - page (documentation)"@en, "Distribution - page (documentation)"@en .
+
+dcat:contactPoint
+  dc:identifier "dcat:contactPoint" ;
+  rdfs:label "Dataset - contact point"@en .
+
+dcat:distribution
+  dc:identifier "dcat:distribution" ;
+  rdfs:label "Dataset - dataset distribution"@en .
+
+dc:spatial
+  dc:identifier "dct:spatial" ;
+  rdfs:label "Dataset - spatial/ geographical coverage"@en, "Public Organisation - spatial coverage"@en, "Public Registry Service - spatial coverage"@en, "Registry Catalogue - spatial coverage"@en .
+
+dc:temporal
+  dc:identifier "dct:temporal" ;
+  rdfs:label "Dataset - temporal coverage"@en .
+
+dc:acrualPeriodicity
+  dc:identifier "dct:accrualPeriodicity" ;
+  rdfs:label "Dataset - accrual periodicity"@en, "Registry Catalogue - accrual periodicity"@en .
+
+dc:creator
+  dc:identifier "dct:creator" ;
+  rdfs:label "Dataset - creator"@en, "Data Catalogue- creator"@en .
+
+dc:hasPart
+  dc:identifier "dct:hasPart" ;
+  rdfs:label "Dataset - has part"@en, "Public Registry Service - has part"@en, "Registry Catalogue - has part"@en .
+
+dc:isPartOf
+  dc:identifier "dct:isPartOf" ;
+  rdfs:label "Dataset - is part of"@en, "Public Registry Service - is part of"@en, "Registry Catalogue - is part of"@en .
+
+<http://www.w3.org/ns/dqv#hasQualityAnnotation>
+  dc:identifier "dqv:hasQualityAnnotation" ;
+  rdfs:label "Dataset - has quality annotation"@en .
+
+<http://www.w3.org/ns/dqv#hasQualityMeasurement>
+  dc:identifier "dqv:hasQualityMeasurement" ;
+  rdfs:label "Dataset - has quality measurement"@en .
+
+dc:isVersionOf
+  dc:identifier "dct:isVersionOf" ;
+  rdfs:label "Dataset - is Version Of"@en .
+
+dc:hasVersion
+  dc:identifier "dct:hasVersion" ;
+  rdfs:label "Dataset - has Version"@en .
+
+dc:isReferencedBy
+  dc:identifier "dct:isReferencedBy" ;
+  rdfs:label "Dataset - is referenced By "@en .
+
+dc:isReplacedBy
+  dc:identifier "dct:isReplacedBy" ;
+  rdfs:label "Dataset - is replaced By "@en .
+
+dc:isRequiredBy
+  dc:identifier "dct:isRequiredBy" ;
+  rdfs:label "Dataset - is required By "@en .
+
+<http://www.w3.org/ns/adms#identifier>
+  dc:identifier "adms:identifier" ;
+  rdfs:label "Dataset - other identifier"@en .
+
+dc:provenance
+  dc:identifier "dct:provenance" ;
+  rdfs:label "Dataset - provenance"@en, "Registry Catalogue - provenance"@en .
+
+prov:qualifiedAttribution
+  dc:identifier "prov:qualifiedAttribution" ;
+  rdfs:label "Dataset - qualified attribution"@en .
+
+dcat:qualifiedRelation
+  dc:identifier "dcat:qualifiedRelation" ;
+  rdfs:label "Dataset - qualified relation"@en .
+
+dc:references
+  dc:identifier "dct:references" ;
+  rdfs:label "Dataset - references"@en .
+
+dc:relation
+  dc:identifier "dct:relation" ;
+  rdfs:label "Dataset - related resource"@en, "Legal Resource - related resource"@en, "Relationship - relation"@en .
+
+dc:replaces
+  dc:identifier "dct:replaces" ;
+  rdfs:label "Dataset - replaces"@en .
+
+dc:requires
+  dc:identifier "dct:requires" ;
+  rdfs:label "Dataset - requires"@en .
+
+<http://www.w3.org/ns/adms#sample>
+  dc:identifier "adms:sample" ;
+  rdfs:label "Dataset - sample"@en .
+
+dcat:spatialResolutionInMeters
+  dc:identifier "dcat:spatialResolutionInMeters" ;
+  rdfs:label "Dataset - spatial resolution (meters)"@en, "Distribution - spatial resolution (meters) "@en .
+
+dcat:temporalResolution
+  dc:identifier "dcat:temporalResolution", "dcat:temporalResolution " ;
+  rdfs:label "Dataset - temporal resolution"@en, "Distribution - temporal resolution"@en .
+
+owl:versionInfo
+  dc:identifier "owl:versionInfo" ;
+  rdfs:label "Dataset - version"@en .
+
+<http://www.w3.org/ns/adms#versionNotes>
+  dc:identifier "adms:versionNotes" ;
+  rdfs:label "Dataset - version notes"@en .
+
+prov:wasGeneratedBy
+  dc:identifier "prov:wasGeneratedBy" ;
+  rdfs:label "Dataset - was generated by"@en .
+
+dcat:accessURL
+  dc:identifier "dcat:accessURL" ;
+  rdfs:label "Distribution - access URL"@en .
+
+<http://data.europa.eu/r5r/availability>
+  dc:identifier "dcatap:availability" ;
+  rdfs:label "Distribution - availability"@en .
+
+dc:format
+  dc:identifier "dct:format" ;
+  rdfs:label "Distribution - format"@en .
+
+dcat:accessService
+  dc:identifier "dcat:accessService " ;
+  rdfs:label "Distribution - access service"@en .
+
+dcat:byteSize
+  dc:identifier "dcat:byteSize" ;
+  rdfs:label "Distribution - byte size"@en .
+
+dcat:downloadURL
+  dc:identifier "dcat:downloadURL" ;
+  rdfs:label "Distribution - download URL"@en .
+
+dc:mediaType
+  dc:identifier "dcat:mediaType" ;
+  rdfs:label "Distribution - media type"@en .
+
+<http://spdx.org/rdf/terms#checksum>
+  dc:identifier "spdx:checksum" ;
+  rdfs:label "distribution - checksum"@en .
+
+dcat:compressFormat
+  dc:identifier "dcat:compressFormat" ;
+  rdfs:label "Distribution - compression format"@en .
+
+<http://www.w3.org/ns/odrl/2/hasPolicy>
+  dc:identifier "odrl:hasPolicy" ;
+  rdfs:label "Distribution - has policy"@en .
+
+dcat:packageFormat
+  dc:identifier "dcat:packageFormat" ;
+  rdfs:label "Distribution - packaging format"@en .
+
+dc:rights
+  dc:identifier "dct:rights" ;
+  rdfs:label "Distribution - rights"@en, "Registry Catalogue - rights"@en .
+
+skos:notation
+  dc:identifier "skos:notation" ;
+  rdfs:label "Identifier - notation"@en .
+
+rdfs:seeAlso
+  dc:identifier "rdfs:seeAlso" ;
+  rdfs:label "Legal Resource - reference"@en .
+
+<http://www.w3.org/ns/locn#geometry>
+  dc:identifier "locn:geometry" ;
+  rdfs:label "Location - geometry"@en .
+
+dcat:bbox
+  dc:identifier " dcat:bbox" ;
+  rdfs:label "Location - bounding box "@en .
+
+dcat:centroid
+  dc:identifier "dcat:centroid" ;
+  rdfs:label "Location - centroid"@en .
+
+dcat:startDate
+  dc:identifier "dcat:startDate" ;
+  rdfs:label "Period Of Time - start date"@en .
+
+dcat:endDate
+  dc:identifier "dcat:endDate" ;
+  rdfs:label "Period Of Time - end date"@en .
+
+<http://www.w3.org/TR/owl-time/#time:hasBeginning>
+  dc:identifier "time:hasBeginning" ;
+  rdfs:label "Period Of Time - beginning"@en .
+
+<http://www.w3.org/TR/owl-time/#time:hasEnd>
+  dc:identifier "time:hasEnd" ;
+  rdfs:label "Period Of Time - end"@en .
+
+skos:prefLabel
+  dc:identifier "skos:prefLabel" ;
+  rdfs:label "Public Organisation - preferred label"@en, "Category - preferred label"@en .
+
+<http://www.w3.org/ns/locn#address>
+  dc:identifier "locn:address" ;
+  rdfs:label "Public Organisation - address"@en .
+
+org:classification
+  dc:identifier "org:classification" ;
+  rdfs:label "Public Organisation - classification"@en .
+
+foaf:homepage
+  dc:identifier "foaf:homepage" ;
+  rdfs:label "Public Organisation - homepage"@en, "Public Registry Service - homepage"@en, "Registry Catalogue - homepage"@en .
+
+<http://data.europa.eu/m8g/hasCompetentAuthority>
+  dc:identifier "cv:hasCompetentAuthority" ;
+  rdfs:label "Public Organisation - has competent authority"@en .
+
+<http://purl.org/vocab/cpsv#produces>
+  dc:identifier "cpsv:produces" ;
+  rdfs:label "Public Registry Service - produces"@en .
+
+<http://data.europa.eu/m8g/thematicArea>
+  dc:identifier "cv:thematicArea" ;
+  rdfs:label "Public Registry Service - thematic area"@en .
+
+<http://data.europa.eu/m8g/hasContactPoint>
+  dc:identifier "cv:hasContactPoint" ;
+  rdfs:label "Public Organisation - has contact point"@en .
+
+<http://data.europa.eu/m8g/hasLegalResouce>
+  dc:identifier "cv:hasLegalResouce" ;
+  rdfs:label "Public Organisation - has legal resource"@en .
+
+dcat:dataset
+  dc:identifier "dcat:dataset" ;
+  rdfs:label "Registry Catalogue - dataset"@en .
+
+dcat:themeTaxonomy
+  dc:identifier "dcat:themeTaxonomy" ;
+  rdfs:label "Registry Catalogue - theme taxonomy"@en .
+
+dcat:catalog
+  dc:identifier "dcat:catalog" ;
+  rdfs:label "Registry Catalogue - catalog "@en .
+
+dcat:record
+  dc:identifier "dcat:record" ;
+  rdfs:label "Registry Catalogue - record"@en .
+
+dcat:service
+  dc:identifier "dcat:service" ;
+  rdfs:label "Registry Catalogue - service"@en .
+
+dcat:hadRole
+  dc:identifier "dcat:hadRole" ;
+  rdfs:label "Relationship - had role"@en .
+
+<http://purl.org/vocab/cpsv#implements>
+  dc:identifier "cpsv:implements" ;
+  rdfs:label "Rule - implements"@en .

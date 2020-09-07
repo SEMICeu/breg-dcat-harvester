@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [
+    <!ENTITY dct "http://purl.org/dc/terms/">
+<!ENTITY foaf "http://xmlns.com/foaf/0.1/">
+<!ENTITY dcat "http://www.w3.org/ns/dcat#">
+<!ENTITY adms "http://www.w3.org/ns/adms#">
+<!ENTITY vann "http://purl.org/vocab/vann/">
+<!ENTITY cc "http://creativecommons.org/ns#">
+<!ENTITY owl "http://www.w3.org/2002/07/owl#">
+<!ENTITY vcard "http://www.w3.org/2006/vcard/ns#">
+<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+<!ENTITY sdmx "http://purl.org/linked-data/sdmx#">
+<!ENTITY qb "http://purl.org/linked-data/cube#">
+<!ENTITY wdrs "http://www.w3.org/2007/05/powder-s#">
+<!ENTITY voaf "http://purl.org/vocommons/voaf#">
+<!ENTITY skos "http://www.w3.org/2004/02/skos/core#">
+<!ENTITY skosDoc "http://www.w3.org/TR/skos-primer/">
+<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<!ENTITY documentation "https://joinup.ec.europa.eu/collection/access-base-registries/solution/abr-specification-registry-registries">
+<!ENTITY documentationTitle "BRegDCAT Application Profile for Base Registries in Europe">
+<!ENTITY spdx "http://spdx.org/rdf/terms#">
+]>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:dct="http://purl.org/dc/terms/"
+    xmlns:cpsv="http://purl.org/vocab/cpsv#"
+    xmlns:cv="http://data.europa.eu/m8g/"
+    xmlns:adms="http://www.w3.org/ns/adms#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:odrl="http://www.w3.org/ns/odrl/2/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:eli="http://data.europa.eu/eli/ontology#"
+    xmlns:dcat="http://www.w3.org/ns/dcat#"
+    xmlns:lcon="http://www.w3.org/ns/locn#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:prov="http://www.w3.org/ns/prov#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:schema="http://schema.org/"
+    xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+    xmlns:vann="http://purl.org/vocab/vann/"
+    xmlns:voaf="http://purl.org/vocommons/voaf#"
+    xmlns:wdrs="http://www.w3.org/2007/05/powder-s#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:spdx="http://spdx.org/rdf/terms#"
+    xmlns:time="http://www.w3.org/2006/time#"
+    xmlns:org="http://www.w3.org/ns/org#"
+    xmlns:dqv="http://www.w3.org/ns/dqv#"
+    xmlns:dcatap="http://data.europa.eu/r5r/">
+
+    <rdf:Description rdf:about="http://www.fundacionctic.org/breg-data#sample-catalog">
+        <rdf:type rdf:resource="dcat:Catalog"/>
+        <dct:description>Catalog description</dct:description>
+        <dct:identifier>Catalog unique ID</dct:identifier>
+        <dct:title>Catalog title</dct:title>
+        <dct:publisher rdf:resource="http://www.fundacionctic.org/breg-data#sample-agent"/>
+        <dcat:themeTaxonomy rdf:resource="http://www.fundacionctic.org/breg-data#sample-schemes"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://www.fundacionctic.org/breg-data#sample-agent">
+        <rdf:type rdf:resource="foaf:Agent"/>
+        <foaf:name>Agent name</foaf:name>
+        <skos:inScheme rdf:resource="http://publications.europa.eu/resource/authority/corporate-body"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://www.fundacionctic.org/breg-data#sample-scheme">
+        <rdf:type rdf:resource="skos:ConceptScheme"/>
+        <dct:title>Scheme title</dct:title>
+    </rdf:Description>
+
+</rdf:RDF>
