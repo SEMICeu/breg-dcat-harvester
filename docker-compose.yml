@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  redis:
+    image: redis:5
+    ports:
+      - "6379"
+  virtuoso:
+    image: tenforce/virtuoso:virtuoso7.2.5
+    environment:
+      DBA_PASSWORD: root
+      SPARQL_UPDATE: "true"
+      DEFAULT_GRAPH: http://www.example.com/my-graph
+    ports:
+      - "8890"
+      - "1111"
+  api:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - redis
+      - virtuoso
+  worker:
+    build: .
+    depends_on:
+      - redis
+      - virtuoso
+    command:
+      [
+        "/usr/local/bin/rq",
+        "worker",
+        "--with-scheduler",
+        "--url",
+        "redis://redis",
+      ]
