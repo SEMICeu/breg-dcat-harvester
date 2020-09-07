@@ -74,6 +74,8 @@ def handle_exception(err):
     if isinstance(err, HTTPException):
         return jsonify_http_exception(err)
 
+    _logger.warning("Request error: %s", repr(err))
+
     code = 500
 
     data = {

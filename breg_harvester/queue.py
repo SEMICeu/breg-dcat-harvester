@@ -12,7 +12,8 @@ QUEUE_NAME = "breg-harvester"
 _logger = logging.getLogger(__name__)
 
 
-def get_queue(connection):
+def get_queue(connection=None):
+    connection = connection if connection else get_redis()
     default_timeout = int(os.getenv(ENV_TIMEOUT, DEFAULT_TIMEOUT))
 
     return Queue(
@@ -25,7 +26,7 @@ def get_redis():
     if "redis" not in g:
         redis_url = current_app.config.get("REDIS_URL")
         redis_client = redis.from_url(redis_url)
-        g["redis"] = redis_client
+        g.redis = redis_client
 
     return g.get("redis")
 
