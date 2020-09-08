@@ -16,7 +16,8 @@ setup(
         "gevent>=1.4,<1.5",
         "flask-cors>=3.0,<3.1",
         "rdflib>=5.0,<5.1",
-        "pyshacl>=0.13,<0.14"
+        "pyshacl>=0.13,<0.14",
+        "sparqlwrapper>=1.8.5,<1.9"
     ],
     extras_require={
         "dev": [
