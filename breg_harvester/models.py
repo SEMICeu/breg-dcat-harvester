@@ -3,9 +3,9 @@ import enum
 
 class DataTypes(enum.Enum):
     XML = "xml"
-    TURTLE = "turtle"
-    TRIPLES = "triples"
-    JSONLD = "jsonld"
+    TURTLE = "n3"
+    TRIPLES = "nt"
+    JSONLD = "json-ld"
 
 
 def mime_for_type(data_type):
@@ -29,6 +29,16 @@ class SourceDataset:
 
         self.uri = uri
         self.data_type = data_type
+
+    def __repr__(self):
+        return "<{}> Type='{}' URI='{}'".format(
+            self.__class__.__name__,
+            self.data_type,
+            self.uri)
+
+    @property
+    def rdflib_format(self):
+        return self.data_type.value
 
     @property
     def mime_type(self):
