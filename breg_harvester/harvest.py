@@ -1,9 +1,12 @@
 import json
+import logging
 
 import requests
 from flask import Blueprint, g
 
 from breg_harvester.models import DataTypes, mime_for_type
+
+_logger = logging.getLogger(__name__)
 
 BLUEPRINT_NAME = "harvest"
 blueprint = Blueprint(BLUEPRINT_NAME, __name__)
@@ -25,10 +28,14 @@ class APIValidator:
         self.api_url = api_url
 
     def validate(self, source):
-        body = self.build_source_body(source)
-        res = requests.post(self.api_url, json=body)
-        res_json = json.loads(res.text)
-        return res_json.get("sh:conforms", False)
+        try:
+            body = self.build_source_body(source)
+            res = requests.post(self.api_url, json=body)
+            res_json = json.loads(res.text)
+            return res_json.get("sh:conforms", False)
+        except:
+            _logger.warning("Error on validator API request", exc_info=True)
+            return False
 
 
 @blueprint.route("/", methods=["GET"])
