@@ -14,12 +14,14 @@ import breg_harvester.queue
 
 ENV_LOG_LEVEL = "BREG_LOG_LEVEL"
 ENV_REDIS = "BREG_REDIS"
+ENV_STORE = "BREG_TRIPLE_STORE"
 ENV_SECRET = "BREG_SECRET_KEY"
 ENV_PORT = "BREG_PORT"
 ENV_SPAWN = "BREG_SERVER_SPAWN"
 
 DEFAULT_SECRET = "secret"
 DEFAULT_REDIS = "redis://redis"
+DEFAULT_STORE = "http://virtuoso:8890/sparql"
 DEFAULT_PORT = 5000
 DEFAULT_SPAWN = 5
 DEFAULT_BIND_HOST = "0.0.0.0"
@@ -45,10 +47,12 @@ def _config_from_env(app):
         secret_key = DEFAULT_SECRET
 
     redis_url = os.getenv(ENV_REDIS, DEFAULT_REDIS)
+    store_url = os.getenv(ENV_STORE, DEFAULT_STORE)
 
     conf_mapping = {
         "SECRET_KEY": secret_key,
-        "REDIS_URL": redis_url
+        "REDIS_URL": redis_url,
+        "TRIPLE_STORE_URL": store_url
     }
 
     _logger.debug("Flask configuration:\n%s", pprint.pformat(conf_mapping))
