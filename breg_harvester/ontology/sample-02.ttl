@@ -1,0 +1,21 @@
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://www.fundacionctic.org/breg-data#another-catalog>
+  a dcat:Catalog ;
+  dc:description "Another catalog description" ;
+  dc:identifier "Another catalog unique ID" ;
+  dc:title "Another catalog title" ;
+  dc:publisher <http://www.fundacionctic.org/breg-data#another-agent> ;
+  dcat:themeTaxonomy <http://www.fundacionctic.org/breg-data#another-scheme> .
+
+<http://www.fundacionctic.org/breg-data#another-agent>
+  a foaf:Agent ;
+  foaf:name "Another agent name" ;
+  skos:inScheme <http://publications.europa.eu/resource/authority/corporate-body> .
+
+<http://www.fundacionctic.org/breg-data#another-scheme>
+  a skos:ConceptScheme ;
+  dc:title "Another scheme title" .
