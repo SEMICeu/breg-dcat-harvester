@@ -3,11 +3,11 @@ import logging
 import pprint
 
 import requests
-from flask import Blueprint, g
+from flask import Blueprint, current_app, g
 from rdflib import Graph
-from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
 from SPARQLWrapper import SPARQLWrapper
 
+import breg_harvester.store
 from breg_harvester.models import DataTypes, mime_for_type
 
 _logger = logging.getLogger(__name__)
@@ -43,9 +43,19 @@ class APIValidator:
             return False
 
 
-def run_harvest(triple_store_url, graph_uri, sources, validator=None):
-    validator = validator if validator else APIValidator()
-    store = SPARQLUpdateStore(triple_store_url, triple_store_url)
+def run_harvest(sources, store=None, validator=None, graph_uri=None):
+    if not store:
+        store = breg_harvester.store.get_sparql_store()
+        _logger.debug("Using default store: %s", store)
+
+    if not validator:
+        validator = APIValidator()
+        _logger.debug("Using default validator: %s", validator)
+
+    if not graph_uri:
+        graph_uri = current_app.config.get("GRAPH_URI")
+        _logger.debug("Using default graph URI: %s", graph_uri)
+
     store_graph = Graph(store, identifier=graph_uri)
 
     _logger.debug("Original sources:\n%s", pprint.pformat(sources))
@@ -57,9 +67,13 @@ def run_harvest(triple_store_url, graph_uri, sources, validator=None):
 
     _logger.info("Valid sources:\n%s", pprint.pformat(valid_sources))
 
+    breg_harvester.store.set_store_header_update(store)
+
     for source in valid_sources:
         _logger.debug("Parsing: %s", source)
         store_graph.parse(source.uri, format=source.rdflib_format)
+
+    breg_harvester.store.set_store_header_read(store)
 
     _logger.debug("Number of triples harvested: %s", len(store_graph))
 
