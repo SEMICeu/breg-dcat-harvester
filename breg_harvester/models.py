@@ -43,3 +43,11 @@ class SourceDataset:
     @property
     def mime_type(self):
         return mime_for_type(self.data_type)
+
+    def to_dict(self):
+        return {
+            "uri": self.uri,
+            "data_type": self.data_type.value,
+            "mime": self.mime_type,
+            "format": self.rdflib_format
+        }
