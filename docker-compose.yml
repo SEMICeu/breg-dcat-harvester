@@ -7,7 +7,7 @@ services:
   virtuoso:
     image: tenforce/virtuoso:virtuoso7.2.5
     environment:
-      DBA_PASSWORD: root
+      DBA_PASSWORD: dba
       SPARQL_UPDATE: "true"
       DEFAULT_GRAPH: http://www.example.com/my-graph
     ports:

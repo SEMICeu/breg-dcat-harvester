@@ -12,18 +12,24 @@ from werkzeug.exceptions import HTTPException
 import breg_harvester.harvest
 import breg_harvester.queue
 
-ENV_LOG_LEVEL = "BREG_LOG_LEVEL"
-ENV_REDIS = "BREG_REDIS"
-ENV_STORE = "BREG_TRIPLE_STORE"
-ENV_GRAPH_URI = "BREG_GRAPH_URI"
-ENV_SECRET = "BREG_SECRET_KEY"
-ENV_PORT = "BREG_PORT"
-ENV_SPAWN = "BREG_SERVER_SPAWN"
+ENV_LOG_LEVEL = "HARVESTER_LOG_LEVEL"
+ENV_REDIS = "HARVESTER_REDIS"
+ENV_SPARQL = "HARVESTER_SPARQL_ENDPOINT"
+ENV_SPARQL_UPDATE = "HARVESTER_SPARQL_UPDATE_ENDPOINT"
+ENV_GRAPH_URI = "HARVESTER_GRAPH_URI"
+ENV_SPARQL_USER = "HARVESTER_SPARQL_USER"
+ENV_SPARQL_PASS = "HARVESTER_SPARQL_PASS"
+ENV_SECRET = "HARVESTER_SECRET_KEY"
+ENV_PORT = "HARVESTER_PORT"
+ENV_SPAWN = "HARVESTER_SERVER_SPAWN"
 
 DEFAULT_SECRET = "secret"
 DEFAULT_REDIS = "redis://redis"
-DEFAULT_STORE = "http://virtuoso:8890/sparql"
-DEFAULT_GRAPH_URI = "http://localhost/pilot"
+DEFAULT_SPARQL = "http://virtuoso:8890/sparql"
+DEFAULT_SPARQL_UPDATE = "http://virtuoso:8890/sparql-auth"
+DEFAULT_GRAPH_URI = "http://localhost/harvester"
+DEFAULT_SPARQL_USER = "dba"
+DEFAULT_SPARQL_PASS = "dba"
 DEFAULT_PORT = 5000
 DEFAULT_SPAWN = 5
 DEFAULT_BIND_HOST = "0.0.0.0"
@@ -49,17 +55,23 @@ def _config_from_env(app):
         secret_key = DEFAULT_SECRET
 
     redis_url = os.getenv(ENV_REDIS, DEFAULT_REDIS)
-    store_url = os.getenv(ENV_STORE, DEFAULT_STORE)
+    sparql = os.getenv(ENV_SPARQL, DEFAULT_SPARQL)
+    sparql_udpate = os.getenv(ENV_SPARQL_UPDATE, DEFAULT_SPARQL_UPDATE)
     graph_uri = os.getenv(ENV_GRAPH_URI, DEFAULT_GRAPH_URI)
+    sparql_user = os.getenv(ENV_SPARQL_USER, DEFAULT_SPARQL_USER)
+    sparql_pass = os.getenv(ENV_SPARQL_PASS, DEFAULT_SPARQL_PASS)
 
     conf_mapping = {
         "SECRET_KEY": secret_key,
         "REDIS_URL": redis_url,
-        "TRIPLE_STORE_URL": store_url,
-        "GRAPH_URI": graph_uri
+        "SPARQL_ENDPOINT": sparql,
+        "SPARQL_UPDATE_ENDPOINT": sparql_udpate,
+        "GRAPH_URI": graph_uri,
+        "SPARQL_USER": sparql_user,
+        "SPARQL_PASS": sparql_pass
     }
 
-    _logger.debug("Flask configuration:\n%s", pprint.pformat(conf_mapping))
+    _logger.info("Flask configuration:\n%s", pprint.pformat(conf_mapping))
 
     app.config.from_mapping(**conf_mapping)
 
