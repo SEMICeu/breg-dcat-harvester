@@ -1,4 +1,9 @@
 import enum
+import json
+import logging
+import os
+
+_logger = logging.getLogger(__name__)
 
 
 class DataTypes(enum.Enum):
@@ -22,7 +27,33 @@ def mime_for_type(data_type):
     return type_map[data_type]
 
 
+def _find_enum(enum_cls, item_val):
+    return next(item for item in enum_cls if item.value == item_val)
+
+
 class SourceDataset:
+    ENV_SOURCES = "HARVESTER_SOURCES"
+
+    @classmethod
+    def from_env(cls):
+        sources_str = os.getenv(cls.ENV_SOURCES)
+
+        if not sources_str:
+            return None
+
+        try:
+            sources = json.loads(sources_str)
+        except Exception as ex:
+            _logger.warning("Error loading sources: %s", ex)
+            return None
+
+        _logger.debug("Environment sources: %s", sources)
+
+        return [
+            SourceDataset(uri, _find_enum(DataTypes, type_val))
+            for uri, type_val in sources
+        ]
+
     def __init__(self, uri, data_type):
         if data_type not in DataTypes:
             raise ValueError("Unknown type: {}".format(data_type))

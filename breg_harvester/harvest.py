@@ -3,7 +3,7 @@ import logging
 import pprint
 
 import requests
-from flask import Blueprint, current_app, g
+from flask import Blueprint, current_app, g, jsonify
 from rdflib import Graph
 from requests.auth import HTTPDigestAuth
 from SPARQLWrapper import SPARQLWrapper
@@ -98,16 +98,12 @@ def run_harvest(sources, store_kwargs=None, validator=None, graph_uri=None):
 
 @blueprint.route("/", methods=["POST"])
 def create_harvest_job():
-    rqueue = breg_harvester.queue.get_queue()
+    sources = SourceDataset.from_env()
 
-    sources = [
-        SourceDataset(
-            "http://192.168.1.140:8080/sample-01.xml",
-            DataTypes.XML),
-        SourceDataset(
-            "http://192.168.1.140:8080/sample-02.ttl",
-            DataTypes.TURTLE)
-    ]
+    if not sources or len(sources) == 0:
+        return jsonify(None)
+
+    rqueue = breg_harvester.queue.get_queue()
 
     store_kwargs = {
         "query_endpoint": current_app.config.get("SPARQL_ENDPOINT"),

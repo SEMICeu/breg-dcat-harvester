@@ -20,6 +20,8 @@ services:
     depends_on:
       - redis
       - virtuoso
+    environment:
+      HARVESTER_SOURCES: ${HARVESTER_SOURCES}
   worker:
     build: .
     depends_on:
