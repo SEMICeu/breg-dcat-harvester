@@ -5,10 +5,14 @@ import pprint
 import requests
 from flask import Blueprint, current_app, g
 from rdflib import Graph
+from requests.auth import HTTPDigestAuth
 from SPARQLWrapper import SPARQLWrapper
+from werkzeug.exceptions import NotFound
 
+import breg_harvester.queue
 import breg_harvester.store
-from breg_harvester.models import DataTypes, mime_for_type
+import breg_harvester.utils
+from breg_harvester.models import DataTypes, SourceDataset, mime_for_type
 
 _logger = logging.getLogger(__name__)
 
@@ -43,11 +47,13 @@ class APIValidator:
             return False
 
 
-def run_harvest(sources, store=None, validator=None, graph_uri=None):
-    if not store:
-        store = breg_harvester.store.get_sparql_store()
-        _logger.debug("Using default store: %s", store)
+class DummyValidator:
+    def validate(self, *args, **kwargs):
+        _logger.info("Using validator: %s", self.__class__)
+        return True
 
+
+def run_harvest(sources, store_kwargs=None, validator=None, graph_uri=None):
     if not validator:
         validator = APIValidator()
         _logger.debug("Using default validator: %s", validator)
@@ -56,9 +62,12 @@ def run_harvest(sources, store=None, validator=None, graph_uri=None):
         graph_uri = current_app.config.get("GRAPH_URI")
         _logger.debug("Using default graph URI: %s", graph_uri)
 
+    store_kwargs = store_kwargs if store_kwargs else {}
+    store = breg_harvester.store.get_sparql_store(**store_kwargs)
+
     store_graph = Graph(store, identifier=graph_uri)
 
-    _logger.debug("Original sources:\n%s", pprint.pformat(sources))
+    _logger.info("Original sources:\n%s", pprint.pformat(sources))
 
     valid_sources = [
         source for source in sources
@@ -75,16 +84,57 @@ def run_harvest(sources, store=None, validator=None, graph_uri=None):
 
     breg_harvester.store.set_store_header_read(store)
 
-    _logger.debug("Number of triples harvested: %s", len(store_graph))
+    res = {
+        "num_triples": len(store_graph),
+        "sources": [item.to_dict() for item in valid_sources]
+    }
+
+    _logger.info("Harvest result:\n%s", pprint.pformat(res))
 
     store_graph.close()
 
-
-@blueprint.route("/", methods=["GET"])
-def get_harvest():
-    return {}
+    return res
 
 
 @blueprint.route("/", methods=["POST"])
-def create_harvest():
-    return {}
+def create_harvest_job():
+    rqueue = breg_harvester.queue.get_queue()
+
+    sources = [
+        SourceDataset(
+            "http://192.168.1.140:8080/sample-01.xml",
+            DataTypes.XML),
+        SourceDataset(
+            "http://192.168.1.140:8080/sample-02.ttl",
+            DataTypes.TURTLE)
+    ]
+
+    store_kwargs = {
+        "query_endpoint": current_app.config.get("SPARQL_ENDPOINT"),
+        "update_endpoint": current_app.config.get("SPARQL_UPDATE_ENDPOINT"),
+        "sparql_user": current_app.config.get("SPARQL_USER"),
+        "sparql_pass": current_app.config.get("SPARQL_PASS")
+    }
+
+    validator = DummyValidator()
+    graph_uri = current_app.config.get("GRAPH_URI")
+
+    job = rqueue.enqueue(run_harvest, kwargs={
+        "sources": sources,
+        "store_kwargs": store_kwargs,
+        "validator": validator,
+        "graph_uri": graph_uri
+    })
+
+    return breg_harvester.utils.job_to_json(job)
+
+
+@blueprint.route("/<job_id>", methods=["GET"])
+def get_harvest_job(job_id):
+    rqueue = breg_harvester.queue.get_queue()
+    job = rqueue.fetch_job(job_id)
+
+    if not job:
+        raise NotFound()
+
+    return breg_harvester.utils.job_to_json(job)

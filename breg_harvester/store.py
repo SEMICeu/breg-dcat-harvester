@@ -14,17 +14,20 @@ _logger = logging.getLogger(__name__)
 _MIME_SPARQL_UPDATE = "application/sparql-update"
 
 
-def get_sparql_store(query_endpoint=None, update_endpoint=None, auth=None):
+def get_sparql_store(query_endpoint=None, update_endpoint=None, sparql_user=None, sparql_pass=None):
     if not query_endpoint:
         query_endpoint = current_app.config.get("SPARQL_ENDPOINT")
 
     if not update_endpoint:
         update_endpoint = current_app.config.get("SPARQL_UPDATE_ENDPOINT")
 
-    if not auth:
-        user = current_app.config.get("SPARQL_USER")
-        pasw = current_app.config.get("SPARQL_PASS")
-        auth = HTTPDigestAuth(user, pasw)
+    if not sparql_user:
+        sparql_user = current_app.config.get("SPARQL_USER")
+
+    if not sparql_pass:
+        sparql_pass = current_app.config.get("SPARQL_PASS")
+
+    auth = HTTPDigestAuth(sparql_user, sparql_pass)
 
     store = SPARQLUpdateStore(
         queryEndpoint=query_endpoint,
