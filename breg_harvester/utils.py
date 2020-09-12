@@ -25,10 +25,10 @@ def to_json(val):
 def job_to_json(job):
     return to_json({
         "job_id": job.id,
-        "description": job.description,
         "status": job.get_status(),
         "result": job.result,
         "enqueued_at": job.enqueued_at,
         "started_at": job.started_at,
-        "ended_at": job.ended_at
+        "ended_at": job.ended_at,
+        "exc_info": job.exc_info
     })
