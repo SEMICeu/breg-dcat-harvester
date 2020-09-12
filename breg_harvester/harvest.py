@@ -19,6 +19,8 @@ _logger = logging.getLogger(__name__)
 BLUEPRINT_NAME = "harvest"
 blueprint = Blueprint(BLUEPRINT_NAME, __name__)
 
+GET_LEN = 20
+
 
 class APIValidator:
     API_URL = "https://www.itb.ec.europa.eu/shacl/cpsv-ap/api/validate"
@@ -134,3 +136,29 @@ def get_harvest_job(job_id):
         raise NotFound()
 
     return breg_harvester.utils.job_to_json(job)
+
+
+@blueprint.route("/", methods=["GET"])
+def get_harvest_jobs():
+    rqueue = breg_harvester.queue.get_queue()
+
+    jobs_finished = [
+        rqueue.fetch_job(jid)
+        for jid in rqueue.finished_job_registry.get_job_ids(start=-GET_LEN)
+    ]
+
+    jobs_failed = [
+        rqueue.fetch_job(jid)
+        for jid in rqueue.failed_job_registry.get_job_ids(start=-GET_LEN)
+    ]
+
+    return {
+        "finished": [
+            breg_harvester.utils.job_to_json(job)
+            for job in jobs_finished
+        ],
+        "failed": [
+            breg_harvester.utils.job_to_json(job)
+            for job in jobs_failed
+        ]
+    }
