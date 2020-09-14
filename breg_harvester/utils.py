@@ -1,5 +1,8 @@
 import datetime
 import json
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 def to_json(val):
@@ -22,13 +25,20 @@ def to_json(val):
         return repr(val)
 
 
-def job_to_json(job):
-    return to_json({
+def job_to_json(job, extended=True):
+    job_dict = {
         "job_id": job.id,
         "status": job.get_status(),
-        "result": job.result,
         "enqueued_at": job.enqueued_at,
         "started_at": job.started_at,
-        "ended_at": job.ended_at,
-        "exc_info": job.exc_info
-    })
+        "ended_at": job.ended_at
+    }
+
+    if extended:
+        job_dict.update({
+            "description": job.description,
+            "result": job.result,
+            "exc_info": job.exc_info
+        })
+
+    return to_json(job_dict)
