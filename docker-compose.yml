@@ -22,6 +22,7 @@ services:
       - virtuoso
     environment:
       HARVESTER_SOURCES: ${HARVESTER_SOURCES}
+      HARVESTER_VALIDATOR_DISABLED: 1
   worker:
     build: .
     depends_on:
