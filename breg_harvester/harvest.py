@@ -3,7 +3,7 @@ import logging
 import pprint
 
 import requests
-from flask import Blueprint, current_app, g, jsonify
+from flask import Blueprint, current_app, g, jsonify, request
 from rdflib import Graph
 from requests.auth import HTTPDigestAuth
 from SPARQLWrapper import SPARQLWrapper
@@ -18,8 +18,6 @@ _logger = logging.getLogger(__name__)
 
 BLUEPRINT_NAME = "harvest"
 blueprint = Blueprint(BLUEPRINT_NAME, __name__)
-
-GET_LEN = 20
 
 
 class APIValidator:
@@ -114,15 +112,23 @@ def create_harvest_job():
         "sparql_pass": current_app.config.get("SPARQL_PASS")
     }
 
-    validator = DummyValidator()
+    if current_app.config.get("VALIDATOR_DISABLED"):
+        validator = DummyValidator()
+    else:
+        validator = APIValidator()
+
     graph_uri = current_app.config.get("GRAPH_URI")
 
-    job = rqueue.enqueue(run_harvest, kwargs={
+    harvest_kwargs = {
         "sources": sources,
         "store_kwargs": store_kwargs,
         "validator": validator,
         "graph_uri": graph_uri
-    })
+    }
+
+    _logger.info("Enqueuing harvest:\n%s", pprint.pformat(harvest_kwargs))
+
+    job = rqueue.enqueue(run_harvest, kwargs=harvest_kwargs)
 
     return breg_harvester.utils.job_to_json(job)
 
@@ -138,27 +144,34 @@ def get_harvest_job(job_id):
     return breg_harvester.utils.job_to_json(job)
 
 
+def _fetch_registry_jobs(reg, rqueue, num):
+    jobs = [
+        rqueue.fetch_job(jid)
+        for jid in reg.get_job_ids(start=-num)
+    ]
+
+    return [
+        breg_harvester.utils.job_to_json(job, extended=False)
+        for job in jobs
+    ]
+
+
 @blueprint.route("/", methods=["GET"])
 def get_harvest_jobs():
+    num = request.args.get("num", 20)
     rqueue = breg_harvester.queue.get_queue()
 
-    jobs_finished = [
-        rqueue.fetch_job(jid)
-        for jid in rqueue.finished_job_registry.get_job_ids(start=-GET_LEN)
-    ]
+    jobs_finished = _fetch_registry_jobs(
+        reg=rqueue.finished_job_registry,
+        rqueue=rqueue,
+        num=num)
 
-    jobs_failed = [
-        rqueue.fetch_job(jid)
-        for jid in rqueue.failed_job_registry.get_job_ids(start=-GET_LEN)
-    ]
+    jobs_failed = _fetch_registry_jobs(
+        reg=rqueue.failed_job_registry,
+        rqueue=rqueue,
+        num=num)
 
     return {
-        "finished": [
-            breg_harvester.utils.job_to_json(job)
-            for job in jobs_finished
-        ],
-        "failed": [
-            breg_harvester.utils.job_to_json(job)
-            for job in jobs_failed
-        ]
+        "finished": jobs_finished,
+        "failed": jobs_failed
     }

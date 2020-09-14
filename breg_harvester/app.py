@@ -22,6 +22,7 @@ ENV_SPARQL_PASS = "HARVESTER_SPARQL_PASS"
 ENV_SECRET = "HARVESTER_SECRET_KEY"
 ENV_PORT = "HARVESTER_PORT"
 ENV_SPAWN = "HARVESTER_SERVER_SPAWN"
+ENV_VALIDATOR_DISABLED = "HARVESTER_VALIDATOR_DISABLED"
 
 DEFAULT_SECRET = "secret"
 DEFAULT_REDIS = "redis://redis"
@@ -60,6 +61,7 @@ def _config_from_env(app):
     graph_uri = os.getenv(ENV_GRAPH_URI, DEFAULT_GRAPH_URI)
     sparql_user = os.getenv(ENV_SPARQL_USER, DEFAULT_SPARQL_USER)
     sparql_pass = os.getenv(ENV_SPARQL_PASS, DEFAULT_SPARQL_PASS)
+    validator_disabled = bool(os.getenv(ENV_VALIDATOR_DISABLED))
 
     conf_mapping = {
         "SECRET_KEY": secret_key,
@@ -68,7 +70,8 @@ def _config_from_env(app):
         "SPARQL_UPDATE_ENDPOINT": sparql_udpate,
         "GRAPH_URI": graph_uri,
         "SPARQL_USER": sparql_user,
-        "SPARQL_PASS": sparql_pass
+        "SPARQL_PASS": sparql_pass,
+        "VALIDATOR_DISABLED": validator_disabled
     }
 
     _logger.info("Flask configuration:\n%s", pprint.pformat(conf_mapping))
