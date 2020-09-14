@@ -96,6 +96,16 @@ def run_harvest(sources, store_kwargs=None, validator=None, graph_uri=None):
     return res
 
 
+@blueprint.route("/source", methods=["GET"])
+def get_sources():
+    sources = SourceDataset.from_env()
+
+    if not sources:
+        return jsonify(None)
+
+    return jsonify([source.to_dict() for source in sources])
+
+
 @blueprint.route("/", methods=["POST"])
 def create_harvest_job():
     sources = SourceDataset.from_env()
