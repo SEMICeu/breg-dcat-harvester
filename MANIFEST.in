@@ -1,2 +1,0 @@
-graft breg_harvester/ontology
-global-exclude *.pyc

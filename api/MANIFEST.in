@@ -1,0 +1,3 @@
+graft breg_harvester/ontology
+graft breg_harvester/spa
+global-exclude *.pyc

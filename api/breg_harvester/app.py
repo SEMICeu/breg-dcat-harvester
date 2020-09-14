@@ -12,6 +12,9 @@ from werkzeug.exceptions import HTTPException
 import breg_harvester.harvest
 import breg_harvester.queue
 
+STATIC_FOLDER = "spa"
+STATIC_URL_PATH = ""
+
 ENV_LOG_LEVEL = "HARVESTER_LOG_LEVEL"
 ENV_REDIS = "HARVESTER_REDIS"
 ENV_SPARQL = "HARVESTER_SPARQL_ENDPOINT"
@@ -115,7 +118,9 @@ def create_app(test_config=None):
 
     app = Flask(
         __name__,
-        instance_relative_config=True)
+        instance_relative_config=True,
+        static_folder=STATIC_FOLDER,
+        static_url_path=STATIC_URL_PATH)
 
     _config_from_env(app)
 
@@ -132,6 +137,13 @@ def create_app(test_config=None):
         url_prefix=PREFIX_HARVEST)
 
     breg_harvester.queue.init_app_redis(app)
+
+    # pylint: disable=unused-variable
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def catch_all(path):
+        return app.send_static_file("index.html")
+
     app.register_error_handler(Exception, handle_exception)
     CORS(app)
 

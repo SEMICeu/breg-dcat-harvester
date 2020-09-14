@@ -1,4 +1,4 @@
-# BREG-DCAT Harvester
+# BREG-DCAT Harvester API
 
 ## Configuration
 
