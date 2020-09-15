@@ -173,7 +173,7 @@ def _fetch_registry_jobs(reg, rqueue, num):
 
 @blueprint.route("/", methods=["GET"])
 def get_harvest_jobs():
-    num = request.args.get("num", 20)
+    num = int(request.args.get("num", 20))
     rqueue = breg_harvester.queue.get_queue()
 
     jobs_finished = _fetch_registry_jobs(
