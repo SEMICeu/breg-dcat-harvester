@@ -70,6 +70,7 @@ function App() {
                 variant="outline-primary"
                 className="mb-3"
                 onClick={onNewJob}
+                disabled={_.isEmpty(sources)}
               >
                 Enqueue new harvest job
               </Button>
