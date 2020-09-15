@@ -22,7 +22,7 @@ Harvester tool for RDF datasets based on the [BRegDCAT](https://joinup.ec.europa
 | `HARVESTER_SPARQL_PASS`            | `dba`                                     | Password for the user of the Virtuoso triple store. |
 | `HARVESTER_PORT`                   | `5000`                                    | Port for the HTTP API server.                       |
 | `HARVESTER_VALIDATOR_DISABLED`     | _None_                                    | Flag to disable the SHACL validator API.            |
-| `HARVESTER_RESULT_TTL`             | `604800` _(7 days)_                       | Seconds that successful jobs will be kept in Redis. |
+| `HARVESTER_RESULT_TTL`             | `2592000` _(30 days)_                     | Seconds that successful jobs will be kept in Redis. |
 
 #### Data sources
 
