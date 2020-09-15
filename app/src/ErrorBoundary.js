@@ -21,8 +21,10 @@ export class ErrorBoundary extends React.Component {
 
     if (error) {
       return (
-        <Alert variant="warning">
-          <Alert.Heading>Ha ocurrido un error</Alert.Heading>
+        <Alert variant="warning m-3">
+          <Alert.Heading>
+            An error occurred, please try again later
+          </Alert.Heading>
           <code>{errDescr ? errDescr : _.toString(error)}</code>
         </Alert>
       );

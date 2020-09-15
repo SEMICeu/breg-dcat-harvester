@@ -2,7 +2,7 @@ import axios from "axios";
 import _ from "lodash";
 import moment from "moment";
 
-export async function fetchJobs({ num } = { num: 6 }) {
+export async function fetchJobs({ num } = { num: 5 }) {
   const response = await axios.get("/api/harvest/", {
     params: {
       num,
