@@ -26,6 +26,7 @@ ENV_SECRET = "HARVESTER_SECRET_KEY"
 ENV_PORT = "HARVESTER_PORT"
 ENV_SPAWN = "HARVESTER_SERVER_SPAWN"
 ENV_VALIDATOR_DISABLED = "HARVESTER_VALIDATOR_DISABLED"
+ENV_RESULT_TTL = "HARVESTER_RESULT_TTL"
 
 DEFAULT_SECRET = "secret"
 DEFAULT_REDIS = "redis://redis"
@@ -37,6 +38,7 @@ DEFAULT_SPARQL_PASS = "dba"
 DEFAULT_PORT = 5000
 DEFAULT_SPAWN = 5
 DEFAULT_BIND_HOST = "0.0.0.0"
+DEFAULT_RESULT_TTL = 3600 * 24 * 7
 
 PREFIX_HARVEST = "/api/harvest"
 
@@ -65,6 +67,7 @@ def _config_from_env(app):
     sparql_user = os.getenv(ENV_SPARQL_USER, DEFAULT_SPARQL_USER)
     sparql_pass = os.getenv(ENV_SPARQL_PASS, DEFAULT_SPARQL_PASS)
     validator_disabled = bool(os.getenv(ENV_VALIDATOR_DISABLED))
+    result_ttl = int(os.getenv(ENV_RESULT_TTL, DEFAULT_RESULT_TTL))
 
     conf_mapping = {
         "SECRET_KEY": secret_key,
@@ -74,7 +77,8 @@ def _config_from_env(app):
         "GRAPH_URI": graph_uri,
         "SPARQL_USER": sparql_user,
         "SPARQL_PASS": sparql_pass,
-        "VALIDATOR_DISABLED": validator_disabled
+        "VALIDATOR_DISABLED": validator_disabled,
+        "RESULT_TTL": result_ttl
     }
 
     _logger.info("Flask configuration:\n%s", pprint.pformat(conf_mapping))

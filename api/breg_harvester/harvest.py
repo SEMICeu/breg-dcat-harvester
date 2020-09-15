@@ -138,7 +138,12 @@ def create_harvest_job():
 
     _logger.info("Enqueuing harvest:\n%s", pprint.pformat(harvest_kwargs))
 
-    job = rqueue.enqueue(run_harvest, kwargs=harvest_kwargs)
+    result_ttl = current_app.config.get("RESULT_TTL")
+
+    job = rqueue.enqueue(
+        run_harvest,
+        result_ttl=result_ttl,
+        kwargs=harvest_kwargs)
 
     return breg_harvester.utils.job_to_json(job)
 
