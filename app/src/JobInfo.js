@@ -30,18 +30,16 @@ export const JobInfo = ({ job }) => {
           ).format("LTS")}`}</span>
         </Card.Subtitle>
         <Card.Text>
-          <p className={numTriples === undefined ? "mb-0" : ""}>
-            <code>{job.job_id}</code>
-          </p>
-          {numTriples !== undefined && (
-            <p className="mb-0">
-              <span className="text-muted mr-1">
-                Resulting number of triples:
-              </span>
-              <strong className="text-info">{numTriples}</strong>
-            </p>
-          )}
+          <code>{job.job_id}</code>
         </Card.Text>
+        {numTriples !== undefined && (
+          <Card.Text>
+            <span className="text-muted mr-1">
+              Resulting number of triples:
+            </span>
+            <strong>{numTriples}</strong>
+          </Card.Text>
+        )}
       </Card.Body>
     </Card>
   );

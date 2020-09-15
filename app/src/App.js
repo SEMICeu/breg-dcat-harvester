@@ -20,18 +20,21 @@ function App() {
   const [sources, setSources] = useState(undefined);
   const [error, setError] = useState(undefined);
 
-  useEffect(() => {
-    setLoading(true);
+  const fetchData = useMemo(() => {
+    return () => {
+      setError(undefined);
+      setLoading(true);
 
-    Promise.all([fetchJobs(), fetchSources()])
-      .then(([jobs, sources]) => {
-        setJobs(jobs);
-        setSources(sources || []);
-      })
-      .catch(setError)
-      .then(() => {
-        setLoading(false);
-      });
+      Promise.all([fetchJobs(), fetchSources()])
+        .then(([jobs, sources]) => {
+          setJobs(jobs);
+          setSources(sources || []);
+        })
+        .catch(setError)
+        .then(() => {
+          setLoading(false);
+        });
+    };
   }, []);
 
   const onNewJob = useMemo(() => {
@@ -40,14 +43,17 @@ function App() {
 
       createJob()
         .then((job) => {
-          alert(`Created new harvest job:\n${job.job_id}`);
+          console.log("Created job", job.job_id);
+          fetchData();
         })
-        .catch(setError)
-        .then(() => {
+        .catch((err) => {
+          setError(err);
           setLoading(false);
         });
     };
-  }, []);
+  }, [fetchData]);
+
+  useEffect(fetchData, []);
 
   return (
     <ErrorBoundary>
@@ -101,7 +107,7 @@ function App() {
               ) : (
                 <Row>
                   {_.map(sources, (source) => (
-                    <Col key={source.uri} lg={6} className="mb-3">
+                    <Col key={source.uri} className="mb-3">
                       <SourceInfo source={source} />
                     </Col>
                   ))}
