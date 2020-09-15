@@ -35,7 +35,9 @@ export const JobInfo = ({ job }) => {
           </p>
           {numTriples !== undefined && (
             <p className="mb-0">
-              Number of harvested triples:{" "}
+              <span className="text-muted mr-1">
+                Resulting number of triples:
+              </span>
               <strong className="text-info">{numTriples}</strong>
             </p>
           )}
