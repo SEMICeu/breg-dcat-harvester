@@ -14,6 +14,8 @@ function getBadgeVariant(status) {
 }
 
 export const JobInfo = ({ job }) => {
+  const numTriples = _.get(job, "result.num_triples", undefined);
+
   return (
     <Card>
       <Card.Body>
@@ -28,7 +30,15 @@ export const JobInfo = ({ job }) => {
           ).format("LTS")}`}</span>
         </Card.Subtitle>
         <Card.Text>
-          <code>{job.job_id}</code>
+          <p className={numTriples === undefined ? "mb-0" : ""}>
+            <code>{job.job_id}</code>
+          </p>
+          {numTriples !== undefined && (
+            <p className="mb-0">
+              Number of harvested triples:{" "}
+              <strong className="text-info">{numTriples}</strong>
+            </p>
+          )}
         </Card.Text>
       </Card.Body>
     </Card>
