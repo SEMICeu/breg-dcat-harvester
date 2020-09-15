@@ -159,14 +159,14 @@ def get_harvest_job(job_id):
     return breg_harvester.utils.job_to_json(job)
 
 
-def _fetch_registry_jobs(reg, rqueue, num):
+def _fetch_registry_jobs(reg, rqueue, num, extended):
     jobs = [
         rqueue.fetch_job(jid)
         for jid in reg.get_job_ids(start=-num)
     ]
 
     return [
-        breg_harvester.utils.job_to_json(job, extended=False)
+        breg_harvester.utils.job_to_json(job, extended=extended)
         for job in jobs
     ]
 
@@ -174,27 +174,32 @@ def _fetch_registry_jobs(reg, rqueue, num):
 @blueprint.route("/", methods=["GET"])
 def get_harvest_jobs():
     num = int(request.args.get("num", 10))
+    extended = bool(request.args.get("extended", False))
     rqueue = breg_harvester.queue.get_queue()
 
     jobs_finished = _fetch_registry_jobs(
         reg=rqueue.finished_job_registry,
         rqueue=rqueue,
-        num=num)
+        num=num,
+        extended=extended)
 
     jobs_failed = _fetch_registry_jobs(
         reg=rqueue.failed_job_registry,
         rqueue=rqueue,
-        num=num)
+        num=num,
+        extended=extended)
 
     jobs_scheduled = _fetch_registry_jobs(
         reg=rqueue.scheduled_job_registry,
         rqueue=rqueue,
-        num=num)
+        num=num,
+        extended=extended)
 
     jobs_started = _fetch_registry_jobs(
         reg=rqueue.started_job_registry,
         rqueue=rqueue,
-        num=num)
+        num=num,
+        extended=extended)
 
     return {
         "finished": jobs_finished,
