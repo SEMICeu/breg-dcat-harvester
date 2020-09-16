@@ -29,7 +29,7 @@ Harvester tool for RDF datasets based on the [BRegDCAT](https://joinup.ec.europa
 Data sources are configured using the `$HARVESTER_SOURCES` environment variable. It should contain a list of lists in a JSON-serialized string. Each list item must contain two items:
 
 - The URI of the data source.
-- The format of the data source as [defined by rdflib](https://rdflib.readthedocs.io/en/stable/plugin_parsers.html).
+- The format of the data source as [defined by rdflib](https://rdflib.readthedocs.io/en/stable/plugin_parsers.html). It should be one of `xml`, `n3`, `nt` or `json-ld`.
 
 For example:
 
