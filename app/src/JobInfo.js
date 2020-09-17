@@ -15,6 +15,7 @@ function getBadgeVariant(status) {
 
 export const JobInfo = ({ job }) => {
   const numTriples = _.get(job, "result.num_triples", undefined);
+  const jobMoment = moment.utc(job.enqueued_at).local();
 
   return (
     <Card>
@@ -25,9 +26,7 @@ export const JobInfo = ({ job }) => {
               {_.capitalize(job.status)}
             </Badge>
           </span>
-          <span>{`${moment(job.enqueued_at).format("ll")} ${moment(
-            job.enqueued_at
-          ).format("LTS")}`}</span>
+          <span>{`${jobMoment.format("ll")} ${jobMoment.format("LTS")}`}</span>
         </Card.Subtitle>
         <Card.Text>
           <code>{job.job_id}</code>
