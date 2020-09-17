@@ -59,7 +59,7 @@ function App() {
     <ErrorBoundary>
       <LoadingSpinner show={loading} />
       <Navbar bg="dark" variant="dark" expand="lg">
-        <Navbar.Brand>BREG Harvester</Navbar.Brand>
+        <Navbar.Brand>BReg DCAT Harvester</Navbar.Brand>
       </Navbar>
       <Container className="mt-4 mb-4">
         {!!error && (
