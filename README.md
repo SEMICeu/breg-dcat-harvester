@@ -29,12 +29,12 @@ Harvester tool for RDF datasets based on the [BRegDCAT](https://joinup.ec.europa
 Data sources are configured using the `$HARVESTER_SOURCES` environment variable. It should contain a list of lists in a JSON-serialized string. Each list item must contain two items:
 
 - The URI of the data source.
-- The format of the data source as [defined by rdflib](https://rdflib.readthedocs.io/en/stable/plugin_parsers.html). It should be one of `xml`, `n3`, `nt` or `json-ld`.
+- The format of the data source as [defined by rdflib](https://rdflib.readthedocs.io/en/stable/plugin_parsers.html). It should be one of `xml`, `turtle`, `nt` or `json-ld`.
 
 For example:
 
 ```
-export HARVESTER_SOURCES='[["https://gist.githubusercontent.com/agmangas/b07a69fd8a4d415c8e3d7a7dff7e41e5/raw/e3d574fdcdd14a11acce566c98486bca3a0f1fa4/breg-sample-01.xml", "xml"], ["https://gist.githubusercontent.com/agmangas/5f737b17ebf97c318e2ca3b4099c4c19/raw/5a1411286eb86a9689230ffcd3052a72fee05d74/breg-sample-02.ttl", "n3"]]'
+export HARVESTER_SOURCES='[["https://gist.githubusercontent.com/agmangas/b07a69fd8a4d415c8e3d7a7dff7e41e5/raw/e3d574fdcdd14a11acce566c98486bca3a0f1fa4/breg-sample-01.xml", "xml"], ["https://gist.githubusercontent.com/agmangas/5f737b17ebf97c318e2ca3b4099c4c19/raw/5a1411286eb86a9689230ffcd3052a72fee05d74/breg-sample-02.ttl", "turtle"], ["https://gist.githubusercontent.com/agmangas/6ddc1e3405d9e890c74f2c1daf28c3fc/raw/623c2392276ecd6b86201744e1eecea324b0ef4c/breg-sample-03.json", "json-ld"]]'
 ```
 
 This variable is then explicitly injected by the Compose file into the _api_ container.

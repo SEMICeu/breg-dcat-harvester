@@ -2,13 +2,14 @@ import enum
 import json
 import logging
 import os
+import pprint
 
 _logger = logging.getLogger(__name__)
 
 
 class DataTypes(enum.Enum):
     XML = "xml"
-    TURTLE = "n3"
+    TURTLE = "turtle"
     TRIPLES = "nt"
     JSONLD = "json-ld"
 
@@ -47,7 +48,7 @@ class SourceDataset:
             _logger.warning("Error loading sources: %s", ex)
             return None
 
-        _logger.debug("Environment sources: %s", sources)
+        _logger.debug("Environment sources:\n%s", pprint.pformat(sources))
 
         return [
             SourceDataset(uri, _find_enum(DataTypes, type_val))
