@@ -7,6 +7,8 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Row from "react-bootstrap/Row";
+import { Slide, toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { createJob, fetchJobs, fetchSources } from "./api";
 import "./App.css";
 import { ErrorBoundary } from "./ErrorBoundary";
@@ -44,19 +46,38 @@ function App() {
       createJob()
         .then((job) => {
           console.log("Created job", job.job_id);
-          fetchData();
+
+          toast.success(
+            <small>
+              Harvest job added to queue:
+              <br />
+              <strong>{job.job_id}</strong>
+            </small>,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
+          );
         })
         .catch((err) => {
           setError(err);
+        })
+        .then(() => {
           setLoading(false);
         });
     };
-  }, [fetchData]);
+  }, []);
 
   useEffect(fetchData, []);
 
   return (
     <ErrorBoundary>
+      <ToastContainer transition={Slide} />
       <LoadingSpinner show={loading} />
       <Navbar bg="dark" variant="dark" expand="lg">
         <Navbar.Brand>BReg DCAT Harvester</Navbar.Brand>
