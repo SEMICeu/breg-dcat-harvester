@@ -7,6 +7,13 @@ Harvester tool for RDF datasets based on the [BRegDCAT](https://joinup.ec.europa
 
 ![Harvester diagram](diagram.png "Harvester diagram")
 
+Please see the **Docker Compose** file `docker-compose.yml` for a self-contained deployment example&mdash;this only requires you to explicitly define the data sources in an environment variable (more info on the [data sources section](#data-sources)):
+
+```
+export HARVESTER_SOURCES='[["https://gist.githubusercontent.com/agmangas/b07a69fd8a4d415c8e3d7a7dff7e41e5/raw/e3d574fdcdd14a11acce566c98486bca3a0f1fa4/breg-sample-01.xml", "xml"]]'
+docker-compose up -d --build
+```
+
 ## API
 
 ### Configuration
