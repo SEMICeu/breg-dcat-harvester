@@ -12,8 +12,6 @@ export const SourceInfo = ({ source }) => {
           </dd>
           <dt className="col-sm-3 col-lg-2 text-muted">MIME type</dt>
           <dd className="col-sm-9 col-lg-10">{source.mime}</dd>
-          <dt className="col-sm-3 col-lg-2 text-muted">Format</dt>
-          <dd className="col-sm-9 col-lg-10">{source.data_type}</dd>
         </dl>
       </Card.Body>
     </Card>
