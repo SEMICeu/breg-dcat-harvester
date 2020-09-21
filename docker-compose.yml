@@ -15,6 +15,7 @@ services:
       - "1111"
   api:
     build: .
+    image: breg-harvester
     ports:
       - "9090:80"
     depends_on:
@@ -24,7 +25,7 @@ services:
       HARVESTER_SOURCES: ${HARVESTER_SOURCES}
       HARVESTER_VALIDATOR_DISABLED: 1
   worker:
-    build: .
+    image: breg-harvester
     depends_on:
       - redis
       - virtuoso
