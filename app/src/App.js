@@ -64,9 +64,7 @@ function App() {
             }
           );
         })
-        .catch((err) => {
-          setError(err);
-        })
+        .catch(setError)
         .then(() => {
           setLoading(false);
         });
@@ -85,8 +83,10 @@ function App() {
       <Container className="mt-4 mb-4">
         {!!error && (
           <Alert variant="danger">
-            <Alert.Heading>An error ocurred</Alert.Heading>
-            <p className="mb-0">{_.toString(error)}</p>
+            <Alert.Heading>An error occurred</Alert.Heading>
+            <p className="mb-0">
+              {_.get(error, "response.data.description") || _.toString(error)}
+            </p>
           </Alert>
         )}
         {!!jobs && (
