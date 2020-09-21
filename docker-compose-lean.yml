@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  redis:
+    image: redis:5
+    ports:
+      - "6379"
+  api:
+    build: .
+    image: breg-harvester
+    ports:
+      - "9090:80"
+    depends_on:
+      - redis
+    environment:
+      HARVESTER_SPARQL_ENDPOINT: ${HARVESTER_SPARQL_ENDPOINT}
+      HARVESTER_SPARQL_UPDATE_ENDPOINT: ${HARVESTER_SPARQL_UPDATE_ENDPOINT}
+      HARVESTER_GRAPH_URI: ${HARVESTER_GRAPH_URI}
+      HARVESTER_SPARQL_USER: ${HARVESTER_SPARQL_USER}
+      HARVESTER_SPARQL_PASS: ${HARVESTER_SPARQL_PASS}
+      HARVESTER_SOURCES: ${HARVESTER_SOURCES}
+      HARVESTER_VALIDATOR_DISABLED: 1
+  worker:
+    image: breg-harvester
+    depends_on:
+      - redis
+    command:
+      [
+        "/usr/local/bin/rq",
+        "worker",
+        "--with-scheduler",
+        "--url",
+        "redis://redis",
+      ]
