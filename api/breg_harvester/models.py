@@ -2,7 +2,6 @@ import enum
 import json
 import logging
 import os
-import pprint
 
 _logger = logging.getLogger(__name__)
 
@@ -29,7 +28,10 @@ def mime_for_type(data_type):
 
 
 def _find_enum(enum_cls, item_val):
-    return next(item for item in enum_cls if item.value == item_val)
+    try:
+        return next(item for item in enum_cls if item.value == item_val)
+    except StopIteration:
+        raise ValueError(f"'{item_val}' is not in enum {list(enum_cls)}")
 
 
 class SourceDataset:
@@ -42,17 +44,9 @@ class SourceDataset:
         if not sources_str:
             return None
 
-        try:
-            sources = json.loads(sources_str)
-        except Exception as ex:
-            _logger.warning("Error loading sources: %s", ex)
-            return None
-
-        _logger.debug("Environment sources:\n%s", pprint.pformat(sources))
-
         return [
             SourceDataset(uri, _find_enum(DataTypes, type_val))
-            for uri, type_val in sources
+            for uri, type_val in json.loads(sources_str)
         ]
 
     def __init__(self, uri, data_type):

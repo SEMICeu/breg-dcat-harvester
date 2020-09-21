@@ -7,7 +7,7 @@ from flask import Blueprint, current_app, g, jsonify, request
 from rdflib import Graph
 from requests.auth import HTTPDigestAuth
 from SPARQLWrapper import SPARQLWrapper
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, ServiceUnavailable
 
 import breg_harvester.queue
 import breg_harvester.store
@@ -98,7 +98,10 @@ def run_harvest(sources, store_kwargs=None, validator=None, graph_uri=None):
 
 @blueprint.route("/source", methods=["GET"])
 def get_sources():
-    sources = SourceDataset.from_env()
+    try:
+        sources = SourceDataset.from_env()
+    except Exception as ex:
+        raise ServiceUnavailable(f"Error reading data sources: {str(ex)}")
 
     if not sources:
         return jsonify(None)
@@ -108,10 +111,13 @@ def get_sources():
 
 @blueprint.route("/", methods=["POST"])
 def create_harvest_job():
-    sources = SourceDataset.from_env()
+    try:
+        sources = SourceDataset.from_env()
+    except Exception as ex:
+        raise ServiceUnavailable(f"Error reading data sources: {str(ex)}")
 
     if not sources or len(sources) == 0:
-        return jsonify(None)
+        raise ServiceUnavailable("Undefined data sources")
 
     rqueue = breg_harvester.queue.get_queue()
 
