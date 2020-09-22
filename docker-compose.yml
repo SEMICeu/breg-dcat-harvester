@@ -17,13 +17,14 @@ services:
     build: .
     image: breg-harvester
     ports:
-      - "9090:80"
+      - "${HARVESTER_PUBLIC_PORT:-9090}:5000"
     depends_on:
       - redis
       - virtuoso
     environment:
+      HARVESTER_LOG_LEVEL: debug
+      HARVESTER_VALIDATOR_DISABLED: ${HARVESTER_VALIDATOR_DISABLED}
       HARVESTER_SOURCES: ${HARVESTER_SOURCES}
-      HARVESTER_VALIDATOR_DISABLED: 1
   worker:
     image: breg-harvester
     depends_on:
@@ -34,6 +35,8 @@ services:
         "/usr/local/bin/rq",
         "worker",
         "--with-scheduler",
+        "--logging_level",
+        "DEBUG",
         "--url",
         "redis://redis",
       ]

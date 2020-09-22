@@ -20,7 +20,7 @@ docker-compose up -d --build
 
 | Variable                           | Default                                   | Description                                         |
 | ---------------------------------- | ----------------------------------------- | --------------------------------------------------- |
-| `HARVESTER_LOG_LEVEL`              | `debug`                                   | Log level of the API logger.                        |
+| `HARVESTER_LOG_LEVEL`              | `info`                                    | Log level of the API logger.                        |
 | `HARVESTER_REDIS`                  | `redis://redis`                           | Redis URL for the jobs queue.                       |
 | `HARVESTER_SPARQL_ENDPOINT`        | `http://virtuoso:8890/sparql`             | Virtuoso SPARQL query endpoint.                     |
 | `HARVESTER_SPARQL_UPDATE_ENDPOINT` | `http://virtuoso:8890/sparql-auth`        | Virtuoso SPARQL update endpoint.                    |
