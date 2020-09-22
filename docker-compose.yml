@@ -22,8 +22,8 @@ services:
       - redis
       - virtuoso
     environment:
-      HARVESTER_LOG_LEVEL: debug
-      HARVESTER_VALIDATOR_DISABLED: ${HARVESTER_VALIDATOR_DISABLED}
+      HARVESTER_LOG_LEVEL: ${HARVESTER_LOG_LEVEL:-debug}
+      HARVESTER_VALIDATOR_DISABLED: ${HARVESTER_VALIDATOR_DISABLED:-}
       HARVESTER_SOURCES: ${HARVESTER_SOURCES}
   worker:
     image: breg-harvester
@@ -31,7 +31,7 @@ services:
       - redis
       - virtuoso
     environment:
-      HARVESTER_LOG_LEVEL: debug
+      HARVESTER_LOG_LEVEL: ${HARVESTER_LOG_LEVEL:-debug}
     command:
       [
         "/usr/local/bin/rq",
