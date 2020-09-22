@@ -3,19 +3,17 @@ import logging
 import os
 import pprint
 
-import coloredlogs
 from flask import Flask, jsonify
 from flask_cors import CORS
 from gevent.pywsgi import WSGIServer
 from werkzeug.exceptions import HTTPException
 
 import breg_harvester.harvest
-import breg_harvester.queue
+import breg_harvester.jobs_queue
 
 STATIC_FOLDER = "spa"
 STATIC_URL_PATH = ""
 
-ENV_LOG_LEVEL = "HARVESTER_LOG_LEVEL"
 ENV_REDIS = "HARVESTER_REDIS"
 ENV_SPARQL = "HARVESTER_SPARQL_ENDPOINT"
 ENV_SPARQL_UPDATE = "HARVESTER_SPARQL_UPDATE_ENDPOINT"
@@ -43,14 +41,6 @@ DEFAULT_RESULT_TTL = 3600 * 24 * 30
 PREFIX_HARVEST = "/api/harvest"
 
 _logger = logging.getLogger(__name__)
-
-
-def init_logging():
-    is_prod = os.getenv("FLASK_ENV", "production") == "production"
-    level_default = logging.INFO if is_prod else logging.DEBUG
-    level = os.getenv(ENV_LOG_LEVEL, level_default)
-    base_logger = logging.getLogger(__name__.split(".")[0])
-    coloredlogs.install(level=level, logger=base_logger)
 
 
 def _config_from_env(app):
@@ -118,8 +108,6 @@ def handle_exception(err):
 
 
 def create_app(test_config=None):
-    init_logging()
-
     app = Flask(
         __name__,
         instance_relative_config=True,
@@ -140,7 +128,7 @@ def create_app(test_config=None):
         breg_harvester.harvest.blueprint,
         url_prefix=PREFIX_HARVEST)
 
-    breg_harvester.queue.init_app_redis(app)
+    breg_harvester.jobs_queue.init_app_redis(app)
 
     # pylint: disable=unused-variable
     @app.route("/", defaults={"path": ""})

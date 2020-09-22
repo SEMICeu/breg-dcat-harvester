@@ -30,13 +30,13 @@ services:
     depends_on:
       - redis
       - virtuoso
+    environment:
+      HARVESTER_LOG_LEVEL: debug
     command:
       [
         "/usr/local/bin/rq",
         "worker",
         "--with-scheduler",
-        "--logging_level",
-        "DEBUG",
         "--url",
         "redis://redis",
       ]

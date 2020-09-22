@@ -2,63 +2,77 @@ import json
 import logging
 import pprint
 
+import rdflib
 import requests
+from flask import current_app
+from rdflib.namespace import SH
 
 from breg_harvester.models import DataTypes, mime_for_type
 
 _logger = logging.getLogger(__name__)
 
 URL_API_ANY = "https://www.itb.ec.europa.eu/shacl/any/api/validate"
+URL_API_BREG = "https://www.itb.ec.europa.eu/shacl/bregdcat-ap/api/validate"
 
 URL_SHACL_MDR = (
-    "https://raw.githubusercontent.com/agmangas/breg-dcat-harvester/"
-    "bc3b337c9304c854aef46d9e552e6a890a9deddf/api/breg_harvester/ontology/"
+    "https://joinup.ec.europa.eu/sites/default/files/distribution/access_url/2020-07/"
+    "404077ab-f8aa-4580-a436-741ae42e0c3a/"
     "BRegDCAT-AP_shacl_mdr-vocabularies_2.00.ttl"
 )
 
 URL_SHACL_SHAPES = (
-    "https://raw.githubusercontent.com/agmangas/breg-dcat-harvester/"
-    "bc3b337c9304c854aef46d9e552e6a890a9deddf/api/breg_harvester/ontology/"
+    "https://joinup.ec.europa.eu/sites/default/files/distribution/access_url/2020-07/"
+    "24180c3dc-b405-49c8-91f0-8d3a7fe51e9e/"
     "BRegDCAT-AP_shacl_shapes_2.00.ttl"
 )
 
 VALIDATION_TYPE_ANY = "any"
+VALIDATION_TYPE_LATEST = "latest"
 EMBEDDING_METHOD_URL = "URL"
-SHACL_RESULT_SEVERITY = "sh:resultSeverity"
-SHACL_SEVERITY_VIOLATION = "sh:Violation"
-SHACL_CONFORMS = "sh:conforms"
-JSONLD_GRAPH = "@graph"
 
 
-def jsonld_report_conforms(report, strict):
+def validation_report_conforms(data, strict):
+    grph = rdflib.Graph()
+    grph.parse(data=data)
+
     _logger.debug(
-        "Processing SHACL JSON-LD report (strict=%s):\n%s",
-        strict, pprint.pformat(report))
+        "Checking SHACL validation report:\n%s",
+        pprint.pformat(list(grph.triples((None, None, None)))))
 
-    if JSONLD_GRAPH not in report and SHACL_CONFORMS in report:
-        return report[SHACL_CONFORMS]
-    elif JSONLD_GRAPH not in report:
-        _logger.warning("Key '%s' not found in JSON-LD report", JSONLD_GRAPH)
-        return True
-
-    root = report[JSONLD_GRAPH]
-    conforms = any(item.get(SHACL_CONFORMS, False) for item in root)
+    triples_conforms = grph.triples((None, SH.conforms, rdflib.Literal(True)))
+    conforms = len(list(triples_conforms)) > 0
 
     if conforms:
         return True
-    elif strict:
+    elif not conforms and strict:
         return False
 
-    any_violation = any(
-        item.get(SHACL_RESULT_SEVERITY) == SHACL_SEVERITY_VIOLATION
-        for item in root)
+    triples_violation = grph.triples((None, SH.resultSeverity, SH.Violation))
+    has_violations = len(list(triples_violation)) > 0
 
-    return not any_violation
+    return not has_violations
 
 
-class ITBAnyValidator:
-    def __init__(self, url_api=URL_API_ANY):
+def _request_validation(url_api, body, strict):
+    try:
+        _logger.debug("Request validation (%s):\n%s", url_api, body)
+        res = requests.post(url_api, json=body)
+        return validation_report_conforms(data=res.text, strict=strict)
+    except:
+        _logger.warning("Error on validation API request", exc_info=True)
+        return False
+
+
+class GenericAPIValidator:
+    def __init__(self, url_api=URL_API_ANY, external_rules=None):
         self.url_api = url_api
+
+        default_rules = [
+            (URL_SHACL_MDR, DataTypes.TURTLE),
+            (URL_SHACL_SHAPES, DataTypes.TURTLE)
+        ]
+
+        self.external_rules = external_rules if external_rules else default_rules
 
     def build_source_body(self, source, external_rules):
         external_rules = [
@@ -75,30 +89,50 @@ class ITBAnyValidator:
             "contentToValidate": source.uri,
             "embeddingMethod": EMBEDDING_METHOD_URL,
             "validationType": VALIDATION_TYPE_ANY,
-            "reportSyntax": mime_for_type(DataTypes.JSONLD),
+            "reportSyntax": mime_for_type(DataTypes.XML),
             "externalRules": external_rules
         }
 
-    def validate(self, source, strict=False, external_rules=None):
-        default_rules = [
-            (URL_SHACL_MDR, DataTypes.TURTLE),
-            (URL_SHACL_SHAPES, DataTypes.TURTLE)
-        ]
+    def validate(self, source, strict=False):
+        body = self.build_source_body(
+            source=source,
+            external_rules=self.external_rules)
 
-        external_rules = external_rules if external_rules else default_rules
-        body = self.build_source_body(source, external_rules)
+        return _request_validation(self.url_api, body, strict)
 
-        try:
-            _logger.debug("Request validation (%s): %s", self.url_api, body)
-            res = requests.post(self.url_api, json=body)
-            report = json.loads(res.text)
-            return jsonld_report_conforms(report=report, strict=strict)
-        except:
-            _logger.warning("Error on validator API request", exc_info=True)
-            return False
+
+class BRegAPIValidator:
+    def __init__(self, url_api=URL_API_BREG):
+        self.url_api = url_api
+
+    def build_source_body(self, source):
+        return {
+            "contentSyntax": source.mime_type,
+            "contentToValidate": source.uri,
+            "embeddingMethod": EMBEDDING_METHOD_URL,
+            "validationType": VALIDATION_TYPE_LATEST,
+            "reportSyntax": mime_for_type(DataTypes.XML)
+        }
+
+    def validate(self, source, strict=False):
+        body = self.build_source_body(source=source)
+        return _request_validation(self.url_api, body, strict)
 
 
 class DummyValidator:
     def validate(self, *args, **kwargs):
-        _logger.info("Using validator: %s", self.__class__)
         return True
+
+
+def get_validator():
+    try:
+        is_disabled = bool(current_app.config.get("VALIDATOR_DISABLED"))
+    except Exception as ex:
+        _logger.info("Error checking current app config: %s", ex)
+        is_disabled = False
+
+    if is_disabled:
+        _logger.info("Validator disabled: Using %s", DummyValidator)
+        return DummyValidator()
+
+    return BRegAPIValidator()

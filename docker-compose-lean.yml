@@ -26,6 +26,8 @@ services:
     image: breg-harvester
     depends_on:
       - redis
+    environment:
+      HARVESTER_LOG_LEVEL: ${HARVESTER_LOG_LEVEL:-info}
     command:
       [
         "/usr/local/bin/rq",

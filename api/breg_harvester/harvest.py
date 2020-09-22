@@ -6,11 +6,11 @@ from rdflib import Graph
 from SPARQLWrapper import SPARQLWrapper
 from werkzeug.exceptions import NotFound, ServiceUnavailable
 
-import breg_harvester.queue
+import breg_harvester.jobs_queue
 import breg_harvester.store
 import breg_harvester.utils
 from breg_harvester.models import SourceDataset
-from breg_harvester.validator import DummyValidator, ITBAnyValidator
+from breg_harvester.validator import get_validator
 
 _logger = logging.getLogger(__name__)
 
@@ -20,19 +20,22 @@ blueprint = Blueprint(BLUEPRINT_NAME, __name__)
 
 def run_harvest(sources, store_kwargs=None, validator=None, graph_uri=None):
     if not validator:
-        validator = ITBAnyValidator()
-        _logger.debug("Using default validator: %s", validator)
+        validator = get_validator()
 
     if not graph_uri:
         graph_uri = current_app.config.get("GRAPH_URI")
-        _logger.debug("Using default graph URI: %s", graph_uri)
 
     store_kwargs = store_kwargs if store_kwargs else {}
+
+    _logger.info("Running harvest:\n%s", pprint.pformat({
+        "sources": sources,
+        "store_kwargs": store_kwargs,
+        "validator": validator,
+        "graph_uri": graph_uri
+    }))
+
     store = breg_harvester.store.get_sparql_store(**store_kwargs)
-
     store_graph = Graph(store, identifier=graph_uri)
-
-    _logger.info("Data sources:\n%s", pprint.pformat(sources))
 
     err_sources = [
         source for source in sources
@@ -85,7 +88,7 @@ def create_harvest_job():
     if not sources or len(sources) == 0:
         raise ServiceUnavailable("Undefined data sources")
 
-    rqueue = breg_harvester.queue.get_queue()
+    rqueue = breg_harvester.jobs_queue.get_queue()
 
     store_kwargs = {
         "query_endpoint": current_app.config.get("SPARQL_ENDPOINT"),
@@ -94,11 +97,7 @@ def create_harvest_job():
         "sparql_pass": current_app.config.get("SPARQL_PASS")
     }
 
-    if current_app.config.get("VALIDATOR_DISABLED"):
-        validator = DummyValidator()
-    else:
-        validator = ITBAnyValidator()
-
+    validator = get_validator()
     graph_uri = current_app.config.get("GRAPH_URI")
 
     harvest_kwargs = {
@@ -122,7 +121,7 @@ def create_harvest_job():
 
 @blueprint.route("/<job_id>", methods=["GET"])
 def get_harvest_job(job_id):
-    rqueue = breg_harvester.queue.get_queue()
+    rqueue = breg_harvester.jobs_queue.get_queue()
     job = rqueue.fetch_job(job_id)
 
     if not job:
@@ -147,7 +146,7 @@ def _fetch_registry_jobs(reg, rqueue, num, extended):
 def get_harvest_jobs():
     num = int(request.args.get("num", 10))
     extended = bool(request.args.get("extended", False))
-    rqueue = breg_harvester.queue.get_queue()
+    rqueue = breg_harvester.jobs_queue.get_queue()
 
     jobs_finished = _fetch_registry_jobs(
         reg=rqueue.finished_job_registry,
