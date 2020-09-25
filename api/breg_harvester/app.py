@@ -3,72 +3,77 @@ import logging
 import os
 import pprint
 
-from flask import Flask, jsonify
+from flask import Flask, current_app, jsonify
 from flask_cors import CORS
 from gevent.pywsgi import WSGIServer
 from werkzeug.exceptions import HTTPException
 
 import breg_harvester.harvest
 import breg_harvester.jobs_queue
+import breg_harvester.scheduler
+from breg_harvester.config import DEFAULT_ENV_CONFIG, AppConfig, EnvConfig
 
 STATIC_FOLDER = "spa"
 STATIC_URL_PATH = ""
-
-ENV_REDIS = "HARVESTER_REDIS"
-ENV_SPARQL = "HARVESTER_SPARQL_ENDPOINT"
-ENV_SPARQL_UPDATE = "HARVESTER_SPARQL_UPDATE_ENDPOINT"
-ENV_GRAPH_URI = "HARVESTER_GRAPH_URI"
-ENV_SPARQL_USER = "HARVESTER_SPARQL_USER"
-ENV_SPARQL_PASS = "HARVESTER_SPARQL_PASS"
-ENV_SECRET = "HARVESTER_SECRET_KEY"
-ENV_PORT = "HARVESTER_PORT"
-ENV_SPAWN = "HARVESTER_SERVER_SPAWN"
-ENV_VALIDATOR_DISABLED = "HARVESTER_VALIDATOR_DISABLED"
-ENV_RESULT_TTL = "HARVESTER_RESULT_TTL"
-
-DEFAULT_SECRET = "secret"
-DEFAULT_REDIS = "redis://redis"
-DEFAULT_SPARQL = "http://virtuoso:8890/sparql"
-DEFAULT_SPARQL_UPDATE = "http://virtuoso:8890/sparql-auth"
-DEFAULT_GRAPH_URI = "http://fundacionctic.org/breg-harvester"
-DEFAULT_SPARQL_USER = "dba"
-DEFAULT_SPARQL_PASS = "dba"
-DEFAULT_PORT = 5000
-DEFAULT_SPAWN = 5
-DEFAULT_BIND_HOST = "0.0.0.0"
-DEFAULT_RESULT_TTL = 3600 * 24 * 30
-
+BIND_HOST = "0.0.0.0"
 PREFIX_HARVEST = "/api/harvest"
+PREFIX_SCHEDULER = "/api/scheduler"
 
 _logger = logging.getLogger(__name__)
 
 
 def _config_from_env(app):
-    secret_key = os.getenv(ENV_SECRET, None)
+    secret_key = os.getenv(EnvConfig.SECRET.value, None)
 
     if not secret_key:
-        _logger.warning("Undefined secret $%s: Using default", ENV_SECRET)
-        secret_key = DEFAULT_SECRET
+        _logger.warning(
+            "Undefined secret $%s: Using default",
+            DEFAULT_ENV_CONFIG[EnvConfig.SECRET])
 
-    redis_url = os.getenv(ENV_REDIS, DEFAULT_REDIS)
-    sparql = os.getenv(ENV_SPARQL, DEFAULT_SPARQL)
-    sparql_udpate = os.getenv(ENV_SPARQL_UPDATE, DEFAULT_SPARQL_UPDATE)
-    graph_uri = os.getenv(ENV_GRAPH_URI, DEFAULT_GRAPH_URI)
-    sparql_user = os.getenv(ENV_SPARQL_USER, DEFAULT_SPARQL_USER)
-    sparql_pass = os.getenv(ENV_SPARQL_PASS, DEFAULT_SPARQL_PASS)
-    validator_disabled = bool(os.getenv(ENV_VALIDATOR_DISABLED))
-    result_ttl = int(os.getenv(ENV_RESULT_TTL, DEFAULT_RESULT_TTL))
+        secret_key = DEFAULT_ENV_CONFIG[EnvConfig.SECRET]
+
+    redis_url = os.getenv(
+        EnvConfig.REDIS.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.REDIS])
+
+    sparql = os.getenv(
+        EnvConfig.SPARQL.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL])
+
+    sparql_udpate = os.getenv(
+        EnvConfig.SPARQL_UPDATE.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL_UPDATE])
+
+    graph_uri = os.getenv(
+        EnvConfig.GRAPH_URI.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.GRAPH_URI])
+
+    sparql_user = os.getenv(
+        EnvConfig.SPARQL_USER.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL_USER])
+
+    sparql_pass = os.getenv(
+        EnvConfig.SPARQL_PASS.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL_PASS])
+
+    validator_disabled = bool(os.getenv(
+        EnvConfig.VALIDATOR_DISABLED.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.VALIDATOR_DISABLED]))
+
+    result_ttl = int(os.getenv(
+        EnvConfig.RESULT_TTL.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.RESULT_TTL]))
 
     conf_mapping = {
-        "SECRET_KEY": secret_key,
-        "REDIS_URL": redis_url,
-        "SPARQL_ENDPOINT": sparql,
-        "SPARQL_UPDATE_ENDPOINT": sparql_udpate,
-        "GRAPH_URI": graph_uri,
-        "SPARQL_USER": sparql_user,
-        "SPARQL_PASS": sparql_pass,
-        "VALIDATOR_DISABLED": validator_disabled,
-        "RESULT_TTL": result_ttl
+        AppConfig.SECRET_KEY.value: secret_key,
+        AppConfig.REDIS_URL.value: redis_url,
+        AppConfig.SPARQL_ENDPOINT.value: sparql,
+        AppConfig.SPARQL_UPDATE_ENDPOINT.value: sparql_udpate,
+        AppConfig.GRAPH_URI.value: graph_uri,
+        AppConfig.SPARQL_USER.value: sparql_user,
+        AppConfig.SPARQL_PASS.value: sparql_pass,
+        AppConfig.VALIDATOR_DISABLED.value: validator_disabled,
+        AppConfig.RESULT_TTL.value: result_ttl
     }
 
     _logger.info("Flask configuration:\n%s", pprint.pformat(conf_mapping))
@@ -107,7 +112,11 @@ def handle_exception(err):
     return jsonify(data), code
 
 
-def create_app(test_config=None):
+def catch_all(path):
+    return current_app.send_static_file("index.html")
+
+
+def create_app(test_config=None, with_scheduler=True):
     app = Flask(
         __name__,
         instance_relative_config=True,
@@ -124,27 +133,37 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    if with_scheduler:
+        breg_harvester.scheduler.init_scheduler(app)
+
     app.register_blueprint(
         breg_harvester.harvest.blueprint,
         url_prefix=PREFIX_HARVEST)
 
+    app.register_blueprint(
+        breg_harvester.scheduler.blueprint,
+        url_prefix=PREFIX_SCHEDULER)
+
     breg_harvester.jobs_queue.init_app_redis(app)
 
-    # pylint: disable=unused-variable
-    @app.route("/", defaults={"path": ""})
-    @app.route("/<path:path>")
-    def catch_all(path):
-        return app.send_static_file("index.html")
+    app.add_url_rule("/", view_func=catch_all, defaults={"path": ""})
+    app.add_url_rule("/<path:path>", view_func=catch_all)
 
     app.register_error_handler(Exception, handle_exception)
+
     CORS(app)
 
     return app
 
 
 def run_wsgi_server():
-    port = int(os.getenv(ENV_PORT, DEFAULT_PORT))
-    spawn = int(os.getenv(ENV_SPAWN, DEFAULT_SPAWN))
+    port = int(os.getenv(
+        EnvConfig.PORT.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.PORT]))
+
+    spawn = int(os.getenv(
+        EnvConfig.SPAWN.value,
+        DEFAULT_ENV_CONFIG[EnvConfig.SPAWN]))
 
     app = create_app()
 
@@ -153,7 +172,7 @@ def run_wsgi_server():
         port, spawn)
 
     http_server = WSGIServer(
-        (DEFAULT_BIND_HOST, port),
+        (BIND_HOST, port),
         application=app,
         log=_logger,
         error_log=_logger,

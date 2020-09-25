@@ -17,7 +17,8 @@ setup(
         "flask-cors>=3.0,<3.1",
         "rdflib>=5.0,<5.1",
         "pyshacl>=0.13,<0.14",
-        "sparqlwrapper>=1.8.5,<1.9"
+        "sparqlwrapper>=1.8.5,<1.9",
+        "Flask-APScheduler>=1.11,<1.12"
     ],
     extras_require={
         "dev": [

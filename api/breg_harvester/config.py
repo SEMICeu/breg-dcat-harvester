@@ -1,0 +1,42 @@
+import enum
+
+
+class EnvConfig(enum.Enum):
+    SECRET = "HARVESTER_SECRET_KEY"
+    REDIS = "HARVESTER_REDIS"
+    SPARQL = "HARVESTER_SPARQL_ENDPOINT"
+    SPARQL_UPDATE = "HARVESTER_SPARQL_UPDATE_ENDPOINT"
+    GRAPH_URI = "HARVESTER_GRAPH_URI"
+    SPARQL_USER = "HARVESTER_SPARQL_USER"
+    SPARQL_PASS = "HARVESTER_SPARQL_PASS"
+    PORT = "HARVESTER_PORT"
+    SPAWN = "HARVESTER_SERVER_SPAWN"
+    VALIDATOR_DISABLED = "HARVESTER_VALIDATOR_DISABLED"
+    RESULT_TTL = "HARVESTER_RESULT_TTL"
+
+
+DEFAULT_ENV_CONFIG = {
+    EnvConfig.SECRET: "secret",
+    EnvConfig.REDIS: "redis://redis",
+    EnvConfig.SPARQL: "http://virtuoso:8890/sparql",
+    EnvConfig.SPARQL_UPDATE: "http://virtuoso:8890/sparql-auth",
+    EnvConfig.GRAPH_URI: "http://fundacionctic.org/breg-harvester",
+    EnvConfig.SPARQL_USER: "dba",
+    EnvConfig.SPARQL_PASS: "dba",
+    EnvConfig.PORT: 5000,
+    EnvConfig.SPAWN: 5,
+    EnvConfig.VALIDATOR_DISABLED: False,
+    EnvConfig.RESULT_TTL: 3600 * 24 * 30
+}
+
+
+class AppConfig(enum.Enum):
+    SECRET_KEY = "SECRET_KEY"
+    REDIS_URL = "REDIS_URL"
+    SPARQL_ENDPOINT = "SPARQL_ENDPOINT"
+    SPARQL_UPDATE_ENDPOINT = "SPARQL_UPDATE_ENDPOINT"
+    GRAPH_URI = "GRAPH_URI"
+    SPARQL_USER = "SPARQL_USER"
+    SPARQL_PASS = "SPARQL_PASS"
+    VALIDATOR_DISABLED = "VALIDATOR_DISABLED"
+    RESULT_TTL = "RESULT_TTL"

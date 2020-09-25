@@ -2,6 +2,8 @@ import datetime
 import json
 import logging
 
+import redis
+
 _logger = logging.getLogger(__name__)
 
 
@@ -42,3 +44,15 @@ def job_to_json(job, extended=True):
         })
 
     return to_json(job_dict)
+
+
+def redis_kwargs_from_url(redis_url):
+    client = redis.from_url(redis_url)
+    conn_kwargs = client.connection_pool.connection_kwargs
+    client.connection_pool.disconnect()
+
+    _logger.debug(
+        "Redis connection args for URL '%s': %s",
+        redis_url, conn_kwargs)
+
+    return conn_kwargs

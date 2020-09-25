@@ -5,7 +5,7 @@ import redis
 from flask import current_app, g
 from rq import Queue
 
-ENV_TIMEOUT = "BREG_TIMEOUT"
+ENV_TIMEOUT = "HARVESTER_QUEUE_TIMEOUT"
 DEFAULT_TIMEOUT = 1800
 
 _logger = logging.getLogger(__name__)

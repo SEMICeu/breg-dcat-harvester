@@ -1,6 +1,7 @@
 import logging
 import pprint
 
+import redis
 from flask import Blueprint, current_app, g, jsonify, request
 from rdflib import Graph
 from SPARQLWrapper import SPARQLWrapper
@@ -78,6 +79,48 @@ def get_sources():
     return jsonify([source.to_dict() for source in sources])
 
 
+def enqueue_harvest_job(sources, app_config=None):
+    app_config = app_config if app_config else current_app.config
+
+    connection = None
+
+    if app_config:
+        redis_url = app_config.get("REDIS_URL")
+        connection = redis.from_url(redis_url)
+
+    rqueue = breg_harvester.jobs_queue.get_queue(connection=connection)
+
+    store_kwargs = {
+        "query_endpoint": app_config.get("SPARQL_ENDPOINT"),
+        "update_endpoint": app_config.get("SPARQL_UPDATE_ENDPOINT"),
+        "sparql_user": app_config.get("SPARQL_USER"),
+        "sparql_pass": app_config.get("SPARQL_PASS")
+    }
+
+    validator = get_validator(app_config=app_config)
+    graph_uri = app_config.get("GRAPH_URI")
+
+    harvest_kwargs = {
+        "sources": sources,
+        "store_kwargs": store_kwargs,
+        "validator": validator,
+        "graph_uri": graph_uri
+    }
+
+    _logger.info(
+        "Enqueuing new harvest job:\n%s",
+        pprint.pformat(harvest_kwargs))
+
+    result_ttl = app_config.get("RESULT_TTL")
+
+    job = rqueue.enqueue(
+        run_harvest,
+        result_ttl=result_ttl,
+        kwargs=harvest_kwargs)
+
+    return breg_harvester.utils.job_to_json(job)
+
+
 @blueprint.route("/", methods=["POST"])
 def create_harvest_job():
     try:
@@ -88,35 +131,7 @@ def create_harvest_job():
     if not sources or len(sources) == 0:
         raise ServiceUnavailable("Undefined data sources")
 
-    rqueue = breg_harvester.jobs_queue.get_queue()
-
-    store_kwargs = {
-        "query_endpoint": current_app.config.get("SPARQL_ENDPOINT"),
-        "update_endpoint": current_app.config.get("SPARQL_UPDATE_ENDPOINT"),
-        "sparql_user": current_app.config.get("SPARQL_USER"),
-        "sparql_pass": current_app.config.get("SPARQL_PASS")
-    }
-
-    validator = get_validator()
-    graph_uri = current_app.config.get("GRAPH_URI")
-
-    harvest_kwargs = {
-        "sources": sources,
-        "store_kwargs": store_kwargs,
-        "validator": validator,
-        "graph_uri": graph_uri
-    }
-
-    _logger.info("Enqueuing harvest:\n%s", pprint.pformat(harvest_kwargs))
-
-    result_ttl = current_app.config.get("RESULT_TTL")
-
-    job = rqueue.enqueue(
-        run_harvest,
-        result_ttl=result_ttl,
-        kwargs=harvest_kwargs)
-
-    return breg_harvester.utils.job_to_json(job)
+    return enqueue_harvest_job(sources)
 
 
 @blueprint.route("/<job_id>", methods=["GET"])

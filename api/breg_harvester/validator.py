@@ -124,9 +124,11 @@ class DummyValidator:
         return True
 
 
-def get_validator():
+def get_validator(app_config=None):
+    app_config = app_config if app_config else current_app.config
+
     try:
-        is_disabled = bool(current_app.config.get("VALIDATOR_DISABLED"))
+        is_disabled = bool(app_config.get("VALIDATOR_DISABLED"))
     except Exception as ex:
         _logger.info("Error checking current app config: %s", ex)
         is_disabled = False
