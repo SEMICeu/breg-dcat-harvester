@@ -30,3 +30,16 @@ export async function createJob() {
   const response = await axios.post("/api/harvest/");
   return response.data;
 }
+
+export async function fetchScheduledJob() {
+  const response = await axios.get("/api/scheduler/");
+  return response.data;
+}
+
+export async function updateScheduledJob({ seconds }) {
+  const response = await axios.post("/api/scheduler/", {
+    interval: seconds,
+  });
+
+  return response.data;
+}

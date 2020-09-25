@@ -14,6 +14,7 @@ import "./App.css";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { JobInfo } from "./JobInfo";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { Scheduler } from "./Scheduler";
 import { SourceInfo } from "./SourceInfo";
 
 function App() {
@@ -88,6 +89,14 @@ function App() {
               {_.get(error, "response.data.description") || _.toString(error)}
             </p>
           </Alert>
+        )}
+        {!error && (
+          <Row className="mb-3">
+            <Col>
+              <h4 className="mb-3">Scheduler</h4>
+              <Scheduler />
+            </Col>
+          </Row>
         )}
         {!!jobs && (
           <Row>
