@@ -1,8 +1,10 @@
 import datetime
 import json
 import logging
+from functools import update_wrapper, wraps
 
 import redis
+from flask import make_response
 
 _logger = logging.getLogger(__name__)
 
@@ -56,3 +58,19 @@ def redis_kwargs_from_url(redis_url):
         redis_url, conn_kwargs)
 
     return conn_kwargs
+
+
+def no_cache_headers(view):
+    """Attribution to:
+    https://arusahni.net/blog/2014/03/flask-nocache.html"""
+
+    @wraps(view)
+    def no_cache(*args, **kwargs):
+        response = make_response(view(*args, **kwargs))
+        response.headers["Last-Modified"] = datetime.datetime.now()
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "-1"
+        return response
+
+    return update_wrapper(no_cache, view)
