@@ -53,14 +53,22 @@ def validation_report_conforms(data, strict):
     return not has_violations
 
 
-def _request_validation(url_api, body, strict):
+def _request_validation(url_api, source, body, strict):
     try:
-        _logger.debug("Request validation (%s):\n%s", url_api, body)
+        _logger.debug(
+            "Request validation (%s):\n%s",
+            url_api, pprint.pformat(body))
+
         res = requests.post(url_api, json=body)
-        return validation_report_conforms(data=res.text, strict=strict)
-    except:
-        _logger.warning("Error on validation API request", exc_info=True)
-        return False
+        valid = validation_report_conforms(data=res.text, strict=strict)
+
+        _logger.log(
+            logging.DEBUG if valid else logging.WARNING,
+            "Validation result for %s: %s", source, "OK" if valid else "Invalid")
+
+        return valid
+    except Exception as ex:
+        raise Exception(f"Error during validation of {source}") from ex
 
 
 class GenericAPIValidator:
@@ -98,7 +106,11 @@ class GenericAPIValidator:
             source=source,
             external_rules=self.external_rules)
 
-        return _request_validation(self.url_api, body, strict)
+        return _request_validation(
+            url_api=self.url_api,
+            source=source,
+            body=body,
+            strict=strict)
 
 
 class BRegAPIValidator:
@@ -116,7 +128,12 @@ class BRegAPIValidator:
 
     def validate(self, source, strict=False):
         body = self.build_source_body(source=source)
-        return _request_validation(self.url_api, body, strict)
+
+        return _request_validation(
+            url_api=self.url_api,
+            source=source,
+            body=body,
+            strict=strict)
 
 
 class DummyValidator:
