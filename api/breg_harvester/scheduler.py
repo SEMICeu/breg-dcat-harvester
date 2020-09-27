@@ -9,7 +9,8 @@ from werkzeug.exceptions import BadRequest, NotFound
 from breg_harvester.config import AppConfig
 from breg_harvester.harvest import enqueue_harvest_job
 from breg_harvester.models import SourceDataset
-from breg_harvester.utils import redis_kwargs_from_url, to_json
+from breg_harvester.utils import (no_cache_headers, redis_kwargs_from_url,
+                                  to_json)
 
 _logger = logging.getLogger(__name__)
 
@@ -73,7 +74,10 @@ def init_scheduler(app):
             "default": RedisJobStore(**redis_kwargs)
         },
         "SCHEDULER_EXECUTORS": {
-            "default": {"type": "threadpool"}
+            "default": {
+                "type": "threadpool",
+                "max_workers": 2
+            }
         },
         "SCHEDULER_JOB_DEFAULTS": {
             "coalesce": True,
@@ -106,6 +110,7 @@ def scheduler_job_to_json(scheduler_job):
 
 
 @blueprint.route("/", methods=["GET"])
+@no_cache_headers
 def get_scheduled_job():
     job = current_app.apscheduler.get_job(SCHEDULED_JOB_ID)
 
