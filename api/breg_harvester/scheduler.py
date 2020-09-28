@@ -1,5 +1,8 @@
+import datetime
 import logging
+import math
 import pprint
+import time
 
 from apscheduler.jobstores.redis import RedisJobStore
 from flask import Blueprint, current_app, request
@@ -100,17 +103,32 @@ def init_scheduler(app):
     _logger.info("APScheduler running")
 
 
+def _get_next_date(base_date, seconds):
+    tstamp_base = time.mktime(base_date.timetuple())
+    tstamp_diff = time.time() - tstamp_base
+
+    if tstamp_diff <= 0:
+        return base_date
+
+    interval_rest = math.ceil(tstamp_diff / float(seconds))
+    tstamp_next = tstamp_base + interval_rest * seconds
+
+    return datetime.datetime.fromtimestamp(tstamp_next)
+
+
 def scheduler_job_to_json(scheduler_job):
+    seconds = scheduler_job.trigger.interval.total_seconds()
+    next_date = scheduler_job.trigger.start_date
+
     return to_json({
         "id": scheduler_job.id,
         "name": scheduler_job.name,
-        "interval_seconds": scheduler_job.trigger.interval.total_seconds(),
-        "next_date": scheduler_job.trigger.start_date
+        "interval_seconds": seconds,
+        "next_date": _get_next_date(next_date, seconds)
     })
 
 
 @blueprint.route("/", methods=["GET"])
-@no_cache_headers
 def get_scheduled_job():
     job = current_app.apscheduler.get_job(SCHEDULED_JOB_ID)
 
