@@ -5,7 +5,6 @@ import pprint
 
 from flask import Flask, current_app, jsonify
 from flask_cors import CORS
-from gevent.pywsgi import WSGIServer
 from werkzeug.exceptions import HTTPException
 
 import breg_harvester.harvest
@@ -154,28 +153,3 @@ def create_app(test_config=None, with_scheduler=True):
     CORS(app)
 
     return app
-
-
-def run_wsgi_server():
-    port = int(os.getenv(
-        EnvConfig.PORT.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.PORT]))
-
-    spawn = int(os.getenv(
-        EnvConfig.SPAWN.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.SPAWN]))
-
-    app = create_app()
-
-    _logger.info(
-        "Starting server on port %s with a pool of %s workers",
-        port, spawn)
-
-    http_server = WSGIServer(
-        (BIND_HOST, port),
-        application=app,
-        log=_logger,
-        error_log=_logger,
-        spawn=spawn)
-
-    http_server.serve_forever()

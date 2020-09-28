@@ -13,12 +13,12 @@ setup(
         "rq>=1.5,<1.6",
         "redis>=3.5,<3.6",
         "requests>=2.24,<2.25",
-        "gevent>=20.6,<20.7",
         "flask-cors>=3.0,<3.1",
         "rdflib>=5.0,<5.1",
         "pyshacl>=0.13,<0.14",
         "sparqlwrapper>=1.8.5,<1.9",
-        "Flask-APScheduler>=1.11,<1.12"
+        "Flask-APScheduler>=1.11,<1.12",
+        "gunicorn[eventlet]>=20.0,<20.1"
     ],
     extras_require={
         "dev": [
@@ -28,11 +28,6 @@ setup(
             "bumpversion>=0.5.3,<1.0",
             "pytest>=3.10.1,<4.0",
             "mock>=3.0.5,<4.0"
-        ]
-    },
-    entry_points={
-        "console_scripts": [
-            "harvester=breg_harvester.app:run_wsgi_server"
         ]
     }
 )

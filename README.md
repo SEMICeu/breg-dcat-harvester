@@ -69,7 +69,6 @@ The Web application will then be available on port **9090**.
 | `HARVESTER_GRAPH_URI`              | `http://fundacionctic.org/breg-harvester` | Default graph URI.                                  |
 | `HARVESTER_SPARQL_USER`            | `dba`                                     | User of the Virtuoso triple store.                  |
 | `HARVESTER_SPARQL_PASS`            | `dba`                                     | Password for the user of the Virtuoso triple store. |
-| `HARVESTER_PORT`                   | `5000`                                    | Port for the HTTP API server.                       |
 | `HARVESTER_VALIDATOR_DISABLED`     | _None_                                    | Flag to disable the SHACL validator API.            |
 | `HARVESTER_RESULT_TTL`             | `2592000` _(30 days)_                     | Seconds that successful jobs will be kept in Redis. |
 
