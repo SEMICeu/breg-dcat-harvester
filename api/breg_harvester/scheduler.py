@@ -28,7 +28,8 @@ def scheduled_job(app_config):
     sources = SourceDataset.from_env()
 
     if not sources or len(sources) == 0:
-        raise Exception("Undefined data sources")
+        _logger.info("Undefined data sources: Skipping scheduled job")
+        return None
 
     return enqueue_harvest_job(sources, app_config=app_config)
 
