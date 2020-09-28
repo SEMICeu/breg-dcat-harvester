@@ -56,6 +56,12 @@ export const Scheduler = () => {
     };
   }, [throwErr]);
 
+  const onIntervalChange = useMemo(() => {
+    return (ev) => {
+      postJob(_.toInteger(ev.target.value));
+    };
+  }, [postJob]);
+
   useEffect(getJob, []);
 
   return (
@@ -71,12 +77,6 @@ export const Scheduler = () => {
                   <dd className="col-lg-9">
                     <code>{job.id}</code>
                   </dd>
-                  <dt className="col-lg-3 text-muted">Interval</dt>
-                  <dd className="col-lg-9">
-                    {moment
-                      .duration(job.interval_seconds, "seconds")
-                      .humanize()}
-                  </dd>
                   <dt className="col-lg-3 text-muted">Next job</dt>
                   <dd className="col-lg-9">
                     {moment(job.next_date).local().format("lll")}
@@ -85,21 +85,23 @@ export const Scheduler = () => {
               </Col>
               <Col md>
                 <Form.Group className="mb-0">
-                  <Form.Label className="text-muted">
-                    Select to update interval
-                  </Form.Label>
+                  <Form.Label>Harvest interval</Form.Label>
                   <Form.Control
                     value={job.interval_seconds}
                     as="select"
-                    onChange={(ev) => {
-                      postJob(_.toInteger(ev.target.value));
-                    }}
+                    size="sm"
+                    onChange={onIntervalChange}
                   >
-                    {_.map(INTERVAL_OPTIONS, (val) => (
-                      <option key={val} value={val}>
-                        {moment.duration(val, "seconds").humanize()}
-                      </option>
-                    ))}
+                    {_.chain(INTERVAL_OPTIONS)
+                      .concat(job.interval_seconds)
+                      .sortBy()
+                      .uniq()
+                      .map((val) => (
+                        <option key={val} value={val}>
+                          {moment.duration(val, "seconds").humanize()}
+                        </option>
+                      ))
+                      .value()}
                   </Form.Control>
                 </Form.Group>
               </Col>
