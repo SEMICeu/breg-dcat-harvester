@@ -157,7 +157,7 @@ def init_scheduler(app):
 
 
 def _get_next_date(base_date, seconds):
-    tstamp_base = time.mktime(base_date.timetuple())
+    tstamp_base = base_date.timestamp()
     tstamp_diff = time.time() - tstamp_base
 
     if tstamp_diff <= 0:
@@ -166,7 +166,7 @@ def _get_next_date(base_date, seconds):
     interval_rest = math.ceil(tstamp_diff / float(seconds))
     tstamp_next = tstamp_base + interval_rest * seconds
 
-    return datetime.datetime.fromtimestamp(tstamp_next)
+    return datetime.datetime.fromtimestamp(tstamp_next, datetime.timezone.utc)
 
 
 def scheduler_job_to_json(scheduler_job):
