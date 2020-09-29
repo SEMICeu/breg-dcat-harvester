@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import { fetchScheduledJob, updateScheduledJob } from "./api";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -70,26 +71,15 @@ export const Scheduler = () => {
       {!!job && (
         <Card>
           <Card.Body>
-            <Row>
+            <Row className="align-items-center">
               <Col md>
-                <dl className="row mb-0">
-                  <dt className="col-lg-3 text-muted">Job ID</dt>
-                  <dd className="col-lg-9">
-                    <code>{job.id}</code>
-                  </dd>
-                  <dt className="col-lg-3 text-muted">Next job</dt>
-                  <dd className="col-lg-9">
-                    {moment(job.next_date).local().format("lll")}
-                  </dd>
-                </dl>
-              </Col>
-              <Col md>
-                <Form.Group className="mb-0">
-                  <Form.Label>Harvest interval</Form.Label>
+                <InputGroup size="sm">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text>Harvest interval</InputGroup.Text>
+                  </InputGroup.Prepend>
                   <Form.Control
                     value={job.interval_seconds}
                     as="select"
-                    size="sm"
                     onChange={onIntervalChange}
                   >
                     {_.chain(INTERVAL_OPTIONS)
@@ -103,7 +93,13 @@ export const Scheduler = () => {
                       ))
                       .value()}
                   </Form.Control>
-                </Form.Group>
+                </InputGroup>
+              </Col>
+              <Col md className="mt-md-0 mt-3">
+                <span className="text-muted">Next job</span>
+                <span className="ml-2">
+                  {moment(job.next_date).local().format("lll")}
+                </span>
               </Col>
             </Row>
           </Card.Body>
