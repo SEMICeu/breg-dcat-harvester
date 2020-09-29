@@ -14,4 +14,13 @@ RUN pip install .
 
 EXPOSE 5000
 
-CMD ["/usr/local/bin/gunicorn", "-b", "0.0.0.0:5000", "-w", "4", "-k", "eventlet", "--access-logfile", "-", "breg_harvester.app:create_app()"]
+# The --preload flag is necessary to avoid duplicating scheduler executions:
+# https://stackoverflow.com/a/40162246
+
+CMD ["/usr/local/bin/gunicorn", \
+    "--bind", "0.0.0.0:5000", \
+    "--workers", "4", \
+    "--worker-class", "eventlet", \
+    "--access-logfile", "-", \
+    "--preload", \
+    "breg_harvester.app:create_app()"]

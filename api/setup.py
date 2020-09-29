@@ -17,7 +17,7 @@ setup(
         "rdflib>=5.0,<5.1",
         "pyshacl>=0.13,<0.14",
         "sparqlwrapper>=1.8.5,<1.9",
-        "Flask-APScheduler>=1.11,<1.12",
+        "APScheduler>=3.6,<3.7",
         "gunicorn[eventlet]>=20.0,<20.1"
     ],
     extras_require={

@@ -10,7 +10,7 @@ from werkzeug.exceptions import HTTPException
 import breg_harvester.harvest
 import breg_harvester.jobs_queue
 import breg_harvester.scheduler
-from breg_harvester.config import DEFAULT_ENV_CONFIG, AppConfig, EnvConfig
+from breg_harvester.config import AppConfig, app_config_from_env
 
 STATIC_FOLDER = "spa"
 STATIC_URL_PATH = ""
@@ -19,65 +19,6 @@ PREFIX_HARVEST = "/api/harvest"
 PREFIX_SCHEDULER = "/api/scheduler"
 
 _logger = logging.getLogger(__name__)
-
-
-def _config_from_env(app):
-    secret_key = os.getenv(EnvConfig.SECRET.value, None)
-
-    if not secret_key:
-        _logger.warning(
-            "Undefined secret $%s: Using default",
-            DEFAULT_ENV_CONFIG[EnvConfig.SECRET])
-
-        secret_key = DEFAULT_ENV_CONFIG[EnvConfig.SECRET]
-
-    redis_url = os.getenv(
-        EnvConfig.REDIS.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.REDIS])
-
-    sparql = os.getenv(
-        EnvConfig.SPARQL.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL])
-
-    sparql_udpate = os.getenv(
-        EnvConfig.SPARQL_UPDATE.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL_UPDATE])
-
-    graph_uri = os.getenv(
-        EnvConfig.GRAPH_URI.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.GRAPH_URI])
-
-    sparql_user = os.getenv(
-        EnvConfig.SPARQL_USER.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL_USER])
-
-    sparql_pass = os.getenv(
-        EnvConfig.SPARQL_PASS.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.SPARQL_PASS])
-
-    validator_disabled = bool(os.getenv(
-        EnvConfig.VALIDATOR_DISABLED.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.VALIDATOR_DISABLED]))
-
-    result_ttl = int(os.getenv(
-        EnvConfig.RESULT_TTL.value,
-        DEFAULT_ENV_CONFIG[EnvConfig.RESULT_TTL]))
-
-    conf_mapping = {
-        AppConfig.SECRET_KEY.value: secret_key,
-        AppConfig.REDIS_URL.value: redis_url,
-        AppConfig.SPARQL_ENDPOINT.value: sparql,
-        AppConfig.SPARQL_UPDATE_ENDPOINT.value: sparql_udpate,
-        AppConfig.GRAPH_URI.value: graph_uri,
-        AppConfig.SPARQL_USER.value: sparql_user,
-        AppConfig.SPARQL_PASS.value: sparql_pass,
-        AppConfig.VALIDATOR_DISABLED.value: validator_disabled,
-        AppConfig.RESULT_TTL.value: result_ttl
-    }
-
-    _logger.info("Flask configuration:\n%s", pprint.pformat(conf_mapping))
-
-    app.config.from_mapping(**conf_mapping)
 
 
 def jsonify_http_exception(err):
@@ -122,7 +63,16 @@ def create_app(test_config=None, with_scheduler=True):
         static_folder=STATIC_FOLDER,
         static_url_path=STATIC_URL_PATH)
 
-    _config_from_env(app)
+    config_map = app_config_from_env()
+
+    secure_config_map = config_map.copy()
+    secure_config_map.pop(AppConfig.SECRET_KEY.value)
+
+    _logger.info(
+        "Flask app configuration:\n%s",
+        pprint.pformat(secure_config_map))
+
+    app.config.from_mapping(**config_map)
 
     if test_config is not None:
         app.config.from_mapping(test_config)
