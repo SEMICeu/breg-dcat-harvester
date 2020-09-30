@@ -107,9 +107,7 @@ def enqueue_harvest_job(sources, app_config=None):
         "graph_uri": graph_uri
     }
 
-    _logger.info(
-        "Enqueuing new harvest job:\n%s",
-        pprint.pformat(harvest_kwargs))
+    _logger.debug("Enqueuing new harvest job:\n%s", pprint.pformat(sources))
 
     result_ttl = app_config.get("RESULT_TTL")
 
