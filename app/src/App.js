@@ -21,13 +21,15 @@ import { SourceInfo } from "./SourceInfo";
 const REFETCH_INTERVAL_MS =
   _.toInteger(process.env.REACT_APP_REFETCH_INTERVAL_MS) || 10000;
 
+const NUM_JOBS = _.toInteger(process.env.REACT_APP_NUM_JOBS) || 5;
+
 function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
 
   const fetchJobsPartial = useMemo(() => {
     return () =>
-      fetchJobs({ num: 5, extended: true }).then((jobs) => jobs || []);
+      fetchJobs({ num: NUM_JOBS, extended: true }).then((jobs) => jobs || []);
   }, []);
 
   const queryJobs = useQuery("jobs", fetchJobsPartial, {
@@ -99,7 +101,11 @@ function App() {
             {!!queryJobs.data && (
               <Row>
                 <Col>
-                  <h4 className="mb-3">Recent harvest jobs</h4>
+                  <h4>Recent harvest jobs</h4>
+                  <p className="text-muted">
+                    This list shows the latest <strong>{NUM_JOBS}</strong> jobs{" "}
+                    <em>for each job status</em>
+                  </p>
                   <Button
                     variant="outline-primary"
                     className="mb-3"
