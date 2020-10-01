@@ -18,7 +18,7 @@ import { Scheduler } from "./Scheduler";
 import { SourceInfo } from "./SourceInfo";
 
 const REFETCH_INTERVAL_MS =
-  _.toInteger(process.env.REACT_APP_REFETCH_INTERVAL_MS) || 15000;
+  _.toInteger(process.env.REACT_APP_REFETCH_INTERVAL_MS) || 20000;
 
 const NUM_JOBS = _.toInteger(process.env.REACT_APP_NUM_JOBS) || 5;
 
