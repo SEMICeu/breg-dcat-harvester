@@ -6,12 +6,22 @@ https://edmondchuc.com/rdflib-sparqlupdatestore-5-0-0/
 import logging
 
 from flask import current_app
+from rdflib import BNode
 from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
 from requests.auth import HTTPDigestAuth
 
 _logger = logging.getLogger(__name__)
 
 _MIME_SPARQL_UPDATE = "application/sparql-update"
+
+
+def _node_to_sparql(node):
+    """Function to map BNodes to a representation that is allowed by the SPARQLStore."""
+
+    if isinstance(node, BNode):
+        return "<bnode:b%s>" % node
+
+    return node.n3()
 
 
 def get_sparql_store(query_endpoint=None, update_endpoint=None, sparql_user=None, sparql_pass=None):
@@ -34,7 +44,8 @@ def get_sparql_store(query_endpoint=None, update_endpoint=None, sparql_user=None
         update_endpoint=update_endpoint,
         auth=auth,
         context_aware=True,
-        postAsEncoded=False)
+        postAsEncoded=False,
+        node_to_sparql=_node_to_sparql)
 
     store.method = "POST"
     store.formula_aware = True
