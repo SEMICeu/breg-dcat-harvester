@@ -7,6 +7,7 @@ from flask import Flask, current_app, jsonify
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
+import breg_harvester.browser
 import breg_harvester.harvest
 import breg_harvester.jobs_queue
 import breg_harvester.scheduler
@@ -17,6 +18,7 @@ STATIC_URL_PATH = ""
 BIND_HOST = "0.0.0.0"
 PREFIX_HARVEST = "/api/harvest"
 PREFIX_SCHEDULER = "/api/scheduler"
+PREFIX_BROWSER = "/api/browser"
 
 _logger = logging.getLogger(__name__)
 
@@ -92,6 +94,10 @@ def create_app(test_config=None, with_scheduler=True):
     app.register_blueprint(
         breg_harvester.scheduler.blueprint,
         url_prefix=PREFIX_SCHEDULER)
+
+    app.register_blueprint(
+        breg_harvester.browser.blueprint,
+        url_prefix=PREFIX_BROWSER)
 
     breg_harvester.jobs_queue.init_app_redis(app)
 
