@@ -143,12 +143,12 @@ def _term_to_dict(term, redis, extended=True, label_lang="en"):
     return ret
 
 
-def _get_query_triple_objects(graph_query):
+def _query_to_dicts(graph_query, idx):
     store = breg_harvester.store.get_sparql_store()
     identifier = current_app.config.get("GRAPH_URI")
     graph = Graph(store, identifier=identifier)
     qres = graph.query(graph_query)
-    terms = set(item[2] for item in qres)
+    terms = set(item[idx] for item in qres)
     extended = bool(request.args.get("ext", False))
     redis = get_redis()
 
@@ -170,7 +170,7 @@ def get_catalog_taxonomies():
         } LIMIT 50
         """
 
-    return jsonify(_get_query_triple_objects(graph_query))
+    return jsonify(_query_to_dicts(graph_query, idx=2))
 
 
 @blueprint.route("/catalog/location", methods=["GET"])
@@ -186,7 +186,7 @@ def get_catalog_locations():
         } LIMIT 50
         """
 
-    return jsonify(_get_query_triple_objects(graph_query))
+    return jsonify(_query_to_dicts(graph_query, idx=2))
 
 
 @blueprint.route("/catalog/language", methods=["GET"])
@@ -202,7 +202,7 @@ def get_catalog_languages():
         } LIMIT 50
         """
 
-    return jsonify(_get_query_triple_objects(graph_query))
+    return jsonify(_query_to_dicts(graph_query, idx=2))
 
 
 @blueprint.route("/dataset/theme", methods=["GET"])
@@ -217,4 +217,22 @@ def get_dataset_themes():
         } LIMIT 50
         """
 
-    return jsonify(_get_query_triple_objects(graph_query))
+    return jsonify(_query_to_dicts(graph_query, idx=2))
+
+
+@blueprint.route("/catalog/publisher/type", methods=["GET"])
+def get_catalog_publisher_types():
+    graph_query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX dcat: <http://www.w3.org/ns/dcat#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX dct: <http://purl.org/dc/terms/>
+        SELECT ?catalog ?publisher ?publisherType
+        WHERE {
+            ?catalog rdf:type dcat:Catalog .
+            ?catalog dct:publisher ?publisher .
+            ?publisher dct:type ?publisherType .
+        } LIMIT 50
+        """
+
+    return jsonify(_query_to_dicts(graph_query, idx=2))
