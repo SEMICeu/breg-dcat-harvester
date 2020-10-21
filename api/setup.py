@@ -18,7 +18,8 @@ setup(
         "pyshacl>=0.13,<0.14",
         "sparqlwrapper>=1.8.5,<1.9",
         "APScheduler>=3.6,<3.7",
-        "gunicorn[eventlet]>=20.0,<20.1"
+        "gunicorn[eventlet]>=20.0,<20.1",
+        "timeout-decorator>=0.4,<0.5"
     ],
     extras_require={
         "dev": [
