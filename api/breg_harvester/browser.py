@@ -5,7 +5,7 @@ import urllib.request
 
 import timeout_decorator
 from flask import Blueprint, current_app, jsonify, request
-from rdflib import Graph
+from rdflib import Graph, Literal, URIRef
 from rdflib.namespace import DCAT, DCTERMS, SKOS
 from rdflib.plugin import PluginException
 
@@ -121,9 +121,12 @@ def _load_graph(term, redis, write_cache=True):
 
 
 def _term_to_dict(term, redis, extended=True, label_lang="en"):
-    ret = {"n3": term.n3()}
+    ret = {
+        "n3": term.n3(),
+        "class": term.__class__.__name__
+    }
 
-    if not extended:
+    if not extended or term.__class__ is Literal:
         return ret
 
     load_res = _load_graph(term=term, redis=redis, write_cache=True)
