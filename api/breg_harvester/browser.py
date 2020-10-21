@@ -1,4 +1,5 @@
 import collections
+import enum
 import logging
 import pprint
 import urllib.request
@@ -126,7 +127,7 @@ def _term_to_dict(term, redis, extended=True, label_lang="en"):
         "class": term.__class__.__name__
     }
 
-    if not extended or term.__class__ is Literal:
+    if not extended or term.__class__ is not URIRef:
         return ret
 
     load_res = _load_graph(term=term, redis=redis, write_cache=True)
@@ -239,3 +240,143 @@ def get_catalog_publisher_types():
         """
 
     return jsonify(_query_to_dicts(graph_query, idx=2))
+
+
+class FilterKeys(enum.Enum):
+    CATALOG = "catalog"
+    DATASET = "dataset"
+    THEME_TAXONOMY = "themeTaxonomy"
+    LANGUAGE = "language"
+    THEME = "theme"
+    PUBLISHER = "publisher"
+    PUBLISHER_TYPE = "publisherType"
+    LOCATION = "location"
+
+
+def _get_datasets(graph, uris):
+    graph_query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX dcat: <http://www.w3.org/ns/dcat#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX dct: <http://purl.org/dc/terms/>
+        SELECT 
+            ?catalog 
+            ?dataset 
+            ?description 
+            ?identifier 
+            ?title 
+            ?distribution 
+            ?distributionURL 
+            ?distributionType 
+            ?datasetSpatial 
+            ?theme
+        WHERE {{
+            ?catalog rdf:type dcat:Catalog .
+            ?dataset rdf:type dcat:Dataset . 
+            ?catalog dcat:dataset ?dataset .
+            ?dataset dct:description ?description .
+            ?dataset dct:identifier ?identifier .
+            ?dataset dct:title ?title .
+            ?dataset dcat:distribution ?distribution . 
+            ?distribution dcat:accessURL ?distributionURL .
+            ?distribution dcat:mediaType ?distributionType . 
+            ?dataset dct:spatial ?datasetSpatial . 
+            ?dataset dcat:theme ?theme .
+            FILTER (?dataset IN ({}))
+        }}
+        """.format(", ".join(uris))
+
+    _logger.debug("Retrieving datasets:\n%s", graph_query)
+
+    qres = graph.query(graph_query)
+
+    return [{
+        "catalog_uri": item[0].n3(),
+        "uri": item[1].n3(),
+        "description": item[2],
+        "identifier": item[3],
+        "title": item[4],
+        "distribution_uri": item[5].n3(),
+        "distribution_access_url": item[6].n3(),
+        "distribution_type": item[7].n3(),
+        "location": item[8].n3(),
+        "theme": item[9].n3()
+    } for item in qres]
+
+
+@blueprint.route("/dataset/search", methods=["POST"])
+def search_datasets():
+    body = request.get_json()
+    limit = int(body.get("limit", 200))
+
+    filter_keys = [
+        FilterKeys.CATALOG,
+        FilterKeys.DATASET,
+        FilterKeys.THEME_TAXONOMY,
+        FilterKeys.LANGUAGE,
+        FilterKeys.THEME,
+        FilterKeys.PUBLISHER,
+        FilterKeys.PUBLISHER_TYPE,
+        FilterKeys.LOCATION
+    ]
+
+    select = " ".join([f"?{item.value}" for item in filter_keys])
+
+    filter_args = {
+        key: val for key, val in body.get("filters", {}).items()
+        if key in (item.value for item in filter_keys)
+    }
+
+    filter_items = [
+        "?{} IN ({})".format(filter_key, ", \n".join(values))
+        for filter_key, values in filter_args.items()
+    ]
+
+    query_filter = " && ".join(filter_items)
+    query_filter = "FILTER ({})".format(query_filter) if query_filter else ""
+
+    graph_patterns = [
+        f"?{FilterKeys.CATALOG.value} rdf:type dcat:Catalog",
+        f"?{FilterKeys.DATASET.value} rdf:type dcat:Dataset",
+        f"?{FilterKeys.CATALOG.value} dcat:dataset ?{FilterKeys.DATASET.value}",
+        f"?{FilterKeys.CATALOG.value} dcat:themeTaxonomy ?{FilterKeys.THEME_TAXONOMY.value}",
+        f"?{FilterKeys.CATALOG.value} dct:LinguisticSystem ?{FilterKeys.LANGUAGE.value}",
+        f"?{FilterKeys.DATASET.value} dcat:theme ?{FilterKeys.THEME.value}",
+        f"?{FilterKeys.CATALOG.value} dct:publisher ?{FilterKeys.PUBLISHER.value}",
+        f"?{FilterKeys.PUBLISHER.value} dct:type ?{FilterKeys.PUBLISHER_TYPE.value}",
+        f"?{FilterKeys.CATALOG.value} dct:spatial ?{FilterKeys.LOCATION.value}"
+    ]
+
+    graph_patterns = [f"{item} ." for item in graph_patterns]
+    where = "\n".join(graph_patterns)
+
+    search_query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX dcat: <http://www.w3.org/ns/dcat#>
+        PREFIX dct: <http://purl.org/dc/terms/>
+        SELECT {select}
+        WHERE {{
+            {where}
+            {filter}
+        }} 
+        LIMIT {limit}
+        """.format(
+        select=select,
+        where=where,
+        limit=limit,
+        filter=query_filter)
+
+    _logger.debug("Dataset search query:\n%s", search_query)
+
+    store = breg_harvester.store.get_sparql_store()
+    identifier = current_app.config.get("GRAPH_URI")
+    graph = Graph(store, identifier=identifier)
+    search_res = graph.query(search_query)
+
+    idx_dataset = next(
+        idx for idx, val in enumerate(filter_keys)
+        if val is FilterKeys.DATASET)
+
+    uris = list(set(item[idx_dataset].n3() for item in search_res))
+
+    return jsonify({"datasets": _get_datasets(graph, uris)})
