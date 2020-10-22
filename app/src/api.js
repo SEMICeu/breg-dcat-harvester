@@ -43,3 +43,28 @@ export async function updateScheduledJob({ seconds }) {
 
   return response.data;
 }
+
+export async function fetchFacets() {
+  const params = { ext: "true" };
+
+  const responses = await Promise.all([
+    axios.get("/api/browser/catalog/publisher/type", { params }),
+    axios.get("/api/browser/dataset/theme", { params }),
+    axios.get("/api/browser/catalog/language", { params }),
+    axios.get("/api/browser/catalog/location", { params }),
+    axios.get("/api/browser/catalog/taxonomy", { params }),
+  ]);
+
+  const facetKeys = [
+    "publisherType",
+    "theme",
+    "language",
+    "location",
+    "themeTaxonomy",
+  ];
+
+  return _.chain(facetKeys)
+    .map((key, idx) => [key, responses[idx].data])
+    .fromPairs()
+    .value();
+}

@@ -7,6 +7,7 @@ import { BrowserRouter, Link, Route } from "react-router-dom";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import { BrowserSection } from "./BrowserSection";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { SchedulerSection } from "./SchedulerSection";
 
@@ -25,11 +26,15 @@ function App() {
               <Link to="/" className="nav-link">
                 Scheduler
               </Link>
+              <Link to="/search" className="nav-link">
+                Search
+              </Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
         <Container className="mt-4 mb-4">
           <Route exact path="/" component={SchedulerSection} />
+          <Route exact path="/search" component={BrowserSection} />
         </Container>
       </BrowserRouter>
     </ErrorBoundary>
