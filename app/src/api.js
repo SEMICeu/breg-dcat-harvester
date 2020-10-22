@@ -68,3 +68,12 @@ export async function fetchFacets() {
     .fromPairs()
     .value();
 }
+
+export async function searchDatasets({ limit, filters } = { limit: 50 }) {
+  const response = await axios.post("/api/browser/dataset/search", {
+    limit,
+    filters: filters || {},
+  });
+
+  return response.data;
+}
