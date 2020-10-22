@@ -124,7 +124,7 @@ def _load_graph(term, redis, write_cache=True):
 def _term_to_dict(term, redis, extended=True, label_lang="en"):
     ret = {
         "n3": term.n3(),
-        "class": term.__class__.__name__
+        "cls": term.__class__.__name__
     }
 
     if not extended or term.__class__ is not URIRef:
