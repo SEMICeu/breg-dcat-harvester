@@ -254,6 +254,9 @@ class FilterKeys(enum.Enum):
 
 
 def _get_datasets(graph, uris):
+    if len(uris) == 0:
+        return []
+
     graph_query = """
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX dcat: <http://www.w3.org/ns/dcat#>
@@ -269,7 +272,8 @@ def _get_datasets(graph, uris):
             ?distributionURL 
             ?distributionType 
             ?datasetSpatial 
-            ?theme
+            ?theme 
+            ?language
         WHERE {{
             ?catalog rdf:type dcat:Catalog .
             ?dataset rdf:type dcat:Dataset . 
@@ -281,44 +285,39 @@ def _get_datasets(graph, uris):
             ?distribution dcat:accessURL ?distributionURL .
             ?distribution dcat:mediaType ?distributionType . 
             ?dataset dct:spatial ?datasetSpatial . 
-            ?dataset dcat:theme ?theme .
+            ?dataset dcat:theme ?theme . 
+            ?catalog dct:LinguisticSystem ?language .
             FILTER (?dataset IN ({}))
         }}
         """.format(", ".join(uris))
 
-    _logger.debug("Retrieving datasets:\n%s", graph_query)
-
     qres = graph.query(graph_query)
 
-    return [{
-        "catalog_uri": item[0].n3(),
-        "uri": item[1].n3(),
-        "description": item[2],
-        "identifier": item[3],
-        "title": item[4],
-        "distribution_uri": item[5].n3(),
-        "distribution_access_url": item[6].n3(),
-        "distribution_type": item[7].n3(),
-        "location": item[8].n3(),
-        "theme": item[9].n3()
-    } for item in qres]
+    datasets = {}
+
+    for item in qres:
+        dset_uri = item[1].n3()
+        dset = datasets.get(dset_uri, {})
+        dset["catalog"] = item[0].n3()
+        dset["description"] = dset.get("description", []) + [item[2]]
+        dset["identifier"] = dset.get("identifier", []) + [item[3]]
+        dset["title"] = dset.get("title", []) + [item[4]]
+        dset["location"] = dset.get("location", []) + [item[8].n3()]
+        dset["theme"] = dset.get("theme", []) + [item[9].n3()]
+        dset["language"] = dset.get("language", []) + [item[10].n3()]
+        distr = dset.get("distribution", {})
+        distr[item[5].n3()] = {"url": item[6].n3(), "type": item[7].n3()}
+        dset["distribution"] = distr
+        datasets[dset_uri] = dset
+
+    return datasets
 
 
 @blueprint.route("/dataset/search", methods=["POST"])
 def search_datasets():
     body = request.get_json()
     limit = int(body.get("limit", 200))
-
-    filter_keys = [
-        FilterKeys.CATALOG,
-        FilterKeys.DATASET,
-        FilterKeys.THEME_TAXONOMY,
-        FilterKeys.LANGUAGE,
-        FilterKeys.THEME,
-        FilterKeys.PUBLISHER,
-        FilterKeys.PUBLISHER_TYPE,
-        FilterKeys.LOCATION
-    ]
+    filter_keys = list(FilterKeys)
 
     select = " ".join([f"?{item.value}" for item in filter_keys])
 
@@ -366,7 +365,7 @@ def search_datasets():
         limit=limit,
         filter=query_filter)
 
-    _logger.debug("Dataset search query:\n%s", search_query)
+    _logger.debug("SPARQL query (search):\n%s", search_query)
 
     store = breg_harvester.store.get_sparql_store()
     identifier = current_app.config.get("GRAPH_URI")
@@ -378,5 +377,8 @@ def search_datasets():
         if val is FilterKeys.DATASET)
 
     uris = list(set(item[idx_dataset].n3() for item in search_res))
+    dset_dicts = _get_datasets(graph, uris) if len(uris) > 0 else []
 
-    return jsonify({"datasets": _get_datasets(graph, uris)})
+    _logger.debug("Search results:\n%s", pprint.pformat(uris))
+
+    return jsonify(dset_dicts)
