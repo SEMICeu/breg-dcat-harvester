@@ -13,6 +13,20 @@ import { useAsyncError } from "./utils";
 const REGEX_URL = /<(http.+)>/;
 const REGEX_TYPE = /<https:\/\/www.w3.org\/ns\/iana\/media-types\/(.+)#Resource>/;
 
+const DatasetDistributionLink = ({ item }) => {
+  const urlResult = REGEX_URL.exec(item.url);
+  const typeResult = REGEX_TYPE.exec(item.type);
+
+  if (!urlResult || !typeResult) {
+    return null;
+  }
+
+  const url = urlResult[1];
+  const mediaType = typeResult[1];
+
+  return <a href={url}>{mediaType}</a>;
+};
+
 const DatasetCard = ({ dataset }) => {
   const dtClass = "col-md-2 text-muted";
   const ddClass = "col-md-10";
@@ -43,23 +57,11 @@ const DatasetCard = ({ dataset }) => {
       <Card>
         <Card.Header>{_.first(dataset.title)}</Card.Header>
         <Card.Body>
-          {_.map(dataset.distribution, (item) => {
-            const urlResult = REGEX_URL.exec(item.url);
-            const typeResult = REGEX_TYPE.exec(item.type);
-
-            if (!urlResult || !typeResult) {
-              return null;
-            }
-
-            const url = urlResult[1];
-            const mediaType = typeResult[1];
-
-            return (
-              <p key={url}>
-                <a href={url}>{mediaType}</a>
-              </p>
-            );
-          })}
+          {_.map(dataset.distribution, (item) => (
+            <p key={item.url}>
+              <DatasetDistributionLink item={item} />
+            </p>
+          ))}
           <dl className="row mb-0">
             <PropDT name="Catalog" type="dcat:Catalog" />
             <dd className={ddClass}>
