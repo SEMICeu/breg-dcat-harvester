@@ -51,8 +51,10 @@ def _parse_graph(graph, term):
             _logger.debug("URL '%s' contains %s", url, frmt)
             graph.parse(data=parsed_data, format=_FORMAT_SERIALIZE)
             return
-        except Exception as ex:
-            _logger.debug("Error parsing '%s' as %s: %s", url, frmt, ex)
+        except:
+            _logger.warning(
+                "Error parsing '%s' as '%s'",
+                url, frmt, exc_info=True)
 
     raise Exception("Could not parse %s", term)
 
