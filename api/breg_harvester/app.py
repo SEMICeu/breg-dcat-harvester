@@ -5,7 +5,7 @@ import pprint
 
 from flask import Flask, current_app, jsonify
 from flask_cors import CORS
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException, NotFound
 
 import breg_harvester.browser
 import breg_harvester.harvest
@@ -38,6 +38,9 @@ def jsonify_http_exception(err):
 
 
 def handle_exception(err):
+    if isinstance(err, NotFound):
+        return current_app.send_static_file("index.html")
+
     if isinstance(err, HTTPException):
         return jsonify_http_exception(err)
 
