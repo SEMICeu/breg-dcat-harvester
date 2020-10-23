@@ -1,11 +1,13 @@
 import _ from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
+import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
+import { FiCircle, FiDownloadCloud, FiSearch } from "react-icons/fi";
 import { fetchFacets, searchDatasets } from "./api";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { useAsyncError } from "./utils";
@@ -13,34 +15,36 @@ import { useAsyncError } from "./utils";
 const REGEX_URL = /<(http.+)>/;
 const REGEX_TYPE = /<https:\/\/www.w3.org\/ns\/iana\/media-types\/(.+)#Resource>/;
 
-const DatasetDistributionLink = ({ item }) => {
+const CLASS_DT = "col-md-2 text-muted";
+const CLASS_DD = "col-md-10";
+
+const parseDistribution = ({ item }) => {
   const urlResult = REGEX_URL.exec(item.url);
   const typeResult = REGEX_TYPE.exec(item.type);
 
   if (!urlResult || !typeResult) {
-    return null;
+    return;
   }
 
   const url = urlResult[1];
   const mediaType = typeResult[1];
 
-  return <a href={url}>{mediaType}</a>;
+  return { url, mediaType };
 };
 
-const DatasetCard = ({ dataset }) => {
-  const dtClass = "col-md-2 text-muted";
-  const ddClass = "col-md-10";
-
-  const PropDT = ({ name, type }) => (
-    <dt className={dtClass}>
+const DatasetPropDT = ({ name, type }) => {
+  return (
+    <dt className={CLASS_DT}>
       {name}
       <br />
       <code className="text-info">{type}</code>
     </dt>
   );
+};
 
-  const PropArrDD = ({ dsetKey, isURI }) => (
-    <dd className={ddClass}>
+const DatasetPropDD = ({ dataset, dsetKey, isURI }) => {
+  return (
+    <dd className={CLASS_DD}>
       {_.map(_.get(dataset, dsetKey), (val, idx) => (
         <p
           className={idx === _.get(dataset, dsetKey).length - 1 ? "mb-0" : ""}
@@ -51,36 +55,69 @@ const DatasetCard = ({ dataset }) => {
       ))}
     </dd>
   );
+};
 
+const DatasetCard = ({ dataset }) => {
   return (
     <small>
       <Card>
         <Card.Header>{_.first(dataset.title)}</Card.Header>
         <Card.Body>
-          {_.map(dataset.distribution, (item) => (
-            <p key={item.url}>
-              <DatasetDistributionLink item={item} />
-            </p>
-          ))}
+          {_.map(dataset.distribution, (item) => {
+            const dist = parseDistribution({ item });
+
+            return dist ? (
+              <p key={dist.url}>
+                <a href={dist.url}>
+                  <FiDownloadCloud className="mr-2" />
+                  {dist.mediaType}
+                </a>
+              </p>
+            ) : null;
+          })}
           <dl className="row mb-0">
-            <PropDT name="Catalog" type="dcat:Catalog" />
-            <dd className={ddClass}>
+            <DatasetPropDT name="Catalog" type="dcat:Catalog" />
+            <dd className={CLASS_DD}>
               <code>{dataset.catalog}</code>
             </dd>
-            <PropDT name="Identifier" type="rdfs:Literal" />
-            <PropArrDD dsetKey="identifier" />
-            <PropDT name="Description" type="rdfs:Literal" />
-            <PropArrDD dsetKey="description" />
-            <PropDT name="Language" type="dct:LinguisticSystem" />
-            <PropArrDD dsetKey="language" isURI={true} />
-            <PropDT name="Theme" type="skos:Concept" />
-            <PropArrDD dsetKey="theme" isURI={true} />
-            <PropDT name="Location" type="dct:Location" />
-            <PropArrDD dsetKey="location" isURI={true} />
+            <DatasetPropDT name="Identifier" type="rdfs:Literal" />
+            <DatasetPropDD dataset={dataset} dsetKey="identifier" />
+            <DatasetPropDT name="Description" type="rdfs:Literal" />
+            <DatasetPropDD dataset={dataset} dsetKey="description" />
+            <DatasetPropDT name="Language" type="dct:LinguisticSystem" />
+            <DatasetPropDD dataset={dataset} dsetKey="language" isURI={true} />
+            <DatasetPropDT name="Theme" type="skos:Concept" />
+            <DatasetPropDD dataset={dataset} dsetKey="theme" isURI={true} />
+            <DatasetPropDT name="Location" type="dct:Location" />
+            <DatasetPropDD dataset={dataset} dsetKey="location" isURI={true} />
           </dl>
         </Card.Body>
       </Card>
     </small>
+  );
+};
+
+const DatasetSearchSummary = ({ datasets, datasetFacets }) => {
+  return (
+    <div>
+      <span className="mr-2">
+        <small>
+          Found <strong>{_.keys(datasets).length}</strong> datasets
+        </small>
+      </span>
+      {_.map(datasetFacets, (facetsArr, facetKey) =>
+        _.map(facetsArr, (facetItem) => (
+          <Badge
+            variant="light"
+            key={`${facetKey}-${facetItem.n3}`}
+            className="mr-2 text-left"
+          >
+            <span className="text-muted mr-2">{_.startCase(facetKey)}</span>
+            {facetItem.label || <code class="text-wrap">{facetItem.n3}</code>}
+          </Badge>
+        ))
+      )}
+    </div>
   );
 };
 
@@ -89,6 +126,7 @@ export const BrowserSection = () => {
   const [facets, setFacets] = useState(undefined);
   const [selectedFacets, setSelectedFacets] = useState({});
   const [datasets, setDatasets] = useState(undefined);
+  const [datasetFacets, setDatasetFacets] = useState(undefined);
 
   const throwErr = useAsyncError();
 
@@ -127,6 +165,14 @@ export const BrowserSection = () => {
     setSelectedFacets({});
   }, []);
 
+  const getNumFilters = useCallback(() => {
+    return _.chain(selectedFacets)
+      .values()
+      .map((arr) => (arr ? arr.length : 0))
+      .sum()
+      .value();
+  }, [selectedFacets]);
+
   const onSearchClick = useCallback(() => {
     setLoading(true);
 
@@ -135,7 +181,10 @@ export const BrowserSection = () => {
       .value();
 
     searchDatasets({ filters })
-      .then(setDatasets)
+      .then((datasets) => {
+        setDatasets(datasets);
+        setDatasetFacets(_.cloneDeep(selectedFacets));
+      })
       .catch(throwErr)
       .then(() => {
         setLoading(false);
@@ -172,15 +221,20 @@ export const BrowserSection = () => {
                   variant="outline-secondary"
                   className="mb-3 mr-2"
                   onClick={clearFilters}
+                  disabled={getNumFilters() === 0}
                 >
-                  Clear filters
+                  <FiCircle className="mr-2" />
+                  <span className="align-middle">
+                    Clear <strong>{getNumFilters()}</strong> filters
+                  </span>
                 </Button>
                 <Button
                   variant="primary"
                   className="mb-3"
                   onClick={onSearchClick}
                 >
-                  Search
+                  <FiSearch className="mr-2" />
+                  <span className="align-middle">Search</span>
                 </Button>
               </Col>
             </Row>
@@ -250,12 +304,13 @@ export const BrowserSection = () => {
           </Col>
         </Row>
       )}
-      {!!datasets && (
+      {!!datasets && !!datasetFacets && (
         <Row className="mt-3 text-muted">
           <Col>
-            <small>
-              Found <strong>{_.keys(datasets).length}</strong> datasets
-            </small>
+            <DatasetSearchSummary
+              datasets={datasets}
+              datasetFacets={datasetFacets}
+            />
           </Col>
         </Row>
       )}
