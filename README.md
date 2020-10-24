@@ -13,12 +13,13 @@ Main features:
 
 - Collect machine-readable files described in RDF/XML, RDF Turtle, N-triples and JSON-LD. This is known as a _harvest job_.
 - Schedule _harvest jobs_ to be run in a periodic fashion.
+- Simple faceted search on the collected RDF data using BRegDCAT-AP v2 facets/categories.
 
 Each _harvest job_ basically consists of three phases:
 
-- Retrieve the data from the remote sources.
-- Validate the shapes in the data sources using the [ISA2 Interoperability Test Bed SHACL Validator](https://github.com/ISAITB/validator-resources-bregdcat-ap).
-- Merge the data and update the graph in the triple store.
+1. Retrieve the RDF documents from the remote sources.
+2. Validate the shapes in the RDF documents using the [ISA2 Interoperability Test Bed SHACL Validator](https://github.com/ISAITB/validator-resources-bregdcat-ap).
+3. Merge the data and update the graph in the triple store.
 
 The following diagram presents a high-level view of the architecture and typical usage flow. The user first sets the periodic harvest interval or enqueues a manual job using the Web application; these serialized jobs are kept in an in-memory Redis data store. A [Queue Worker](https://python-rq.org/docs/workers/) observes the Redis store, pulling and executing jobs as they become available (only one job may be executed in parallel). Finally, the results of each job execution are persisted in the Virtuoso triple store.
 
@@ -168,4 +169,7 @@ $ curl -X POST --header "Content-Type: application/json" --data '{"interval": 18
 
 ## Adaptability
 
-The harvester is reasonably agnostic to the actual RDF specification being used (in this case **BRegDCAT**). A new validator class could be easily implemented for any specification and injected into the environment. To this end, please see the `validator` module.
+There are two aspects that should be considered when adapting the HTTP API and Web app from BRegDCAT-AP v2 to a different RDF specification:
+
+* Modules related to the **harvest logic** are mostly decoupled from the BRegDCAT-AP v2 specification. Arbitrary RDF documents can be harvested if the validator is disabled using the `HARVESTER_VALIDATOR_DISABLED` configuration variable. Another approach would be to provide a new validator implementation to replace the current BRegDCAT-AP v2 validator.
+* Modules related to the **faceted search** are strongly coupled with the BRegDCAT-AP v2 specification and as such would require a significant amount of work to be adapted.
