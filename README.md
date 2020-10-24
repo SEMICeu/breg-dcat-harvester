@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Harvester for RDF datasets based on the [BRegDCAT](https://joinup.ec.europa.eu/collection/access-base-registries/solution/abr-specification-registry-registries) specification.
+Harvester for RDF documents based on the [BRegDCAT](https://joinup.ec.europa.eu/collection/access-base-registries/solution/abr-specification-registry-registries) specification.
 
 This project is divided in two distinct modules:
 
