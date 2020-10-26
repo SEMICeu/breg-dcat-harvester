@@ -312,6 +312,11 @@ def _get_datasets(graph, uris):
         dset["distribution"] = distr
         datasets[dset_uri] = dset
 
+    for dset in datasets.values():
+        for key, val in dset.items():
+            if isinstance(val, list):
+                dset[key] = list(set(val))
+
     return datasets
 
 
