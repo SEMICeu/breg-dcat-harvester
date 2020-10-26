@@ -32,9 +32,9 @@ const parseDistribution = ({ item }) => {
   return { url, mediaType };
 };
 
-const DatasetPropDT = ({ name, type }) => {
+const DatasetPropDT = ({ name, type, ...props }) => {
   return (
-    <dt className={CLASS_DT}>
+    <dt className={`${CLASS_DT} ${props.className || ""}`}>
       {name}
       <br />
       <code className="text-info">{type}</code>
@@ -42,9 +42,9 @@ const DatasetPropDT = ({ name, type }) => {
   );
 };
 
-const DatasetPropDD = ({ dataset, dsetKey, isURI }) => {
+const DatasetPropDD = ({ dataset, dsetKey, isURI, ...props }) => {
   return (
-    <dd className={CLASS_DD}>
+    <dd className={`${CLASS_DD} ${props.className || ""}`}>
       {_.map(_.get(dataset, dsetKey), (val, idx) => (
         <p
           className={idx === _.get(dataset, dsetKey).length - 1 ? "mb-0" : ""}
@@ -58,11 +58,22 @@ const DatasetPropDD = ({ dataset, dsetKey, isURI }) => {
 };
 
 const DatasetCard = ({ dataset }) => {
+  const mtClass = "mt-2";
+
   return (
-    <small>
-      <Card>
-        <Card.Header>{_.first(dataset.title)}</Card.Header>
-        <Card.Body>
+    <Card>
+      <Card.Header>
+        {_.map(dataset.title, (title, idx) => (
+          <span key={`title-${idx}`}>
+            {title}
+            {idx !== dataset.title.length - 1 && (
+              <span className="ml-3 mr-3">&mdash;</span>
+            )}
+          </span>
+        ))}
+      </Card.Header>
+      <Card.Body>
+        <small>
           {_.map(dataset.distribution, (item) => {
             const dist = parseDistribution({ item });
 
@@ -80,20 +91,63 @@ const DatasetCard = ({ dataset }) => {
             <dd className={CLASS_DD}>
               <code>{dataset.catalog}</code>
             </dd>
-            <DatasetPropDT name="Identifier" type="rdfs:Literal" />
-            <DatasetPropDD dataset={dataset} dsetKey="identifier" />
-            <DatasetPropDT name="Description" type="rdfs:Literal" />
-            <DatasetPropDD dataset={dataset} dsetKey="description" />
-            <DatasetPropDT name="Language" type="dct:LinguisticSystem" />
-            <DatasetPropDD dataset={dataset} dsetKey="language" isURI={true} />
-            <DatasetPropDT name="Theme" type="skos:Concept" />
-            <DatasetPropDD dataset={dataset} dsetKey="theme" isURI={true} />
-            <DatasetPropDT name="Location" type="dct:Location" />
-            <DatasetPropDD dataset={dataset} dsetKey="location" isURI={true} />
+            <DatasetPropDT
+              className={mtClass}
+              name="Identifier"
+              type="rdfs:Literal"
+            />
+            <DatasetPropDD
+              className={mtClass}
+              dataset={dataset}
+              dsetKey="identifier"
+            />
+            <DatasetPropDT
+              className={mtClass}
+              name="Description"
+              type="rdfs:Literal"
+            />
+            <DatasetPropDD
+              className={mtClass}
+              dataset={dataset}
+              dsetKey="description"
+            />
+            <DatasetPropDT
+              className={mtClass}
+              name="Language"
+              type="dct:LinguisticSystem"
+            />
+            <DatasetPropDD
+              className={mtClass}
+              dataset={dataset}
+              dsetKey="language"
+              isURI={true}
+            />
+            <DatasetPropDT
+              className={mtClass}
+              name="Theme"
+              type="skos:Concept"
+            />
+            <DatasetPropDD
+              className={mtClass}
+              dataset={dataset}
+              dsetKey="theme"
+              isURI={true}
+            />
+            <DatasetPropDT
+              className={mtClass}
+              name="Location"
+              type="dct:Location"
+            />
+            <DatasetPropDD
+              className={mtClass}
+              dataset={dataset}
+              dsetKey="location"
+              isURI={true}
+            />
           </dl>
-        </Card.Body>
-      </Card>
-    </small>
+        </small>
+      </Card.Body>
+    </Card>
   );
 };
 
@@ -118,6 +172,78 @@ const DatasetSearchSummary = ({ datasets, datasetFacets }) => {
         ))
       )}
     </div>
+  );
+};
+
+const FacetsCard = ({ facets, isFacetSelected, onFacetClick }) => {
+  const getFacetName = useCallback(
+    ({ facetKey }) =>
+      `${_.startCase(facetKey)} (${(facets[facetKey] || []).length})`,
+    [facets]
+  );
+
+  return (
+    <Card>
+      <Card.Body className="pl-4">
+        <Tab.Container
+          id="left-tabs-example"
+          defaultActiveKey={_.first(_.keys(facets))}
+        >
+          <Row>
+            <Col md={4} className="mb-3 mb-md-0">
+              <small>
+                <Nav variant="pills" className="flex-column">
+                  {_.map(_.keys(facets), (facetKey) => (
+                    <Nav.Item key={facetKey}>
+                      <Nav.Link eventKey={facetKey}>
+                        {getFacetName({ facetKey })}
+                      </Nav.Link>
+                    </Nav.Item>
+                  ))}
+                </Nav>
+              </small>
+            </Col>
+            <Col md={8}>
+              <Tab.Content>
+                {_.map(facets, (items, facetKey) => (
+                  <Tab.Pane key={facetKey} eventKey={facetKey}>
+                    {_.map(items, (facetItem, idx) => (
+                      <Button
+                        key={`${facetKey}-${idx}`}
+                        variant={
+                          isFacetSelected({ facetKey, facetItem })
+                            ? "info"
+                            : "light"
+                        }
+                        size="sm"
+                        className="mr-2 mb-2 text-left"
+                        onClick={() => {
+                          onFacetClick({ facetKey, facetItem });
+                        }}
+                      >
+                        {facetItem.label ? (
+                          facetItem.label
+                        ) : (
+                          <code
+                            className={
+                              isFacetSelected({ facetKey, facetItem })
+                                ? "text-light"
+                                : "text-dark"
+                            }
+                          >
+                            {facetItem.n3}
+                          </code>
+                        )}
+                      </Button>
+                    ))}
+                  </Tab.Pane>
+                ))}
+              </Tab.Content>
+            </Col>
+          </Row>
+        </Tab.Container>
+      </Card.Body>
+    </Card>
   );
 };
 
@@ -238,69 +364,11 @@ export const BrowserSection = () => {
                 </Button>
               </Col>
             </Row>
-            <Card>
-              <Card.Body className="pl-4">
-                <Tab.Container
-                  id="left-tabs-example"
-                  defaultActiveKey={_.first(_.keys(facets))}
-                >
-                  <Row>
-                    <Col md={4} className="mb-3 mb-md-0">
-                      <small>
-                        <Nav variant="pills" className="flex-column">
-                          {_.map(_.keys(facets), (facetKey) => (
-                            <Nav.Item key={facetKey}>
-                              <Nav.Link eventKey={facetKey}>
-                                {`${_.startCase(facetKey)} (${
-                                  (facets[facetKey] || []).length
-                                })`}
-                              </Nav.Link>
-                            </Nav.Item>
-                          ))}
-                        </Nav>
-                      </small>
-                    </Col>
-                    <Col md={8}>
-                      <Tab.Content>
-                        {_.map(facets, (items, facetKey) => (
-                          <Tab.Pane key={facetKey} eventKey={facetKey}>
-                            {_.map(items, (facetItem, idx) => (
-                              <Button
-                                key={`${facetKey}-${idx}`}
-                                variant={
-                                  isFacetSelected({ facetKey, facetItem })
-                                    ? "info"
-                                    : "light"
-                                }
-                                size="sm"
-                                className="mr-2 mb-2 text-left"
-                                onClick={() => {
-                                  onFacetClick({ facetKey, facetItem });
-                                }}
-                              >
-                                {facetItem.label ? (
-                                  facetItem.label
-                                ) : (
-                                  <code
-                                    className={
-                                      isFacetSelected({ facetKey, facetItem })
-                                        ? "text-light"
-                                        : "text-dark"
-                                    }
-                                  >
-                                    {facetItem.n3}
-                                  </code>
-                                )}
-                              </Button>
-                            ))}
-                          </Tab.Pane>
-                        ))}
-                      </Tab.Content>
-                    </Col>
-                  </Row>
-                </Tab.Container>
-              </Card.Body>
-            </Card>
+            <FacetsCard
+              facets={facets}
+              isFacetSelected={isFacetSelected}
+              onFacetClick={onFacetClick}
+            />
           </Col>
         </Row>
       )}
