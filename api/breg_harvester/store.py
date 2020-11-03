@@ -4,6 +4,7 @@ https://edmondchuc.com/rdflib-sparqlupdatestore-5-0-0/
 """
 
 import logging
+import uuid
 
 from flask import current_app
 from rdflib import BNode
@@ -19,7 +20,7 @@ def _node_to_sparql(node):
     """Function to map BNodes to a representation that is allowed by the SPARQLStore."""
 
     if isinstance(node, BNode):
-        return "<bnode:b%s>" % node
+        return "<{}>".format(node.skolemize())
 
     return node.n3()
 
