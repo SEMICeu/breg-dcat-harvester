@@ -7,7 +7,7 @@ import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
-import { FiCircle, FiDownloadCloud, FiSearch } from "react-icons/fi";
+import { FiCircle, FiExternalLink, FiSearch } from "react-icons/fi";
 import { fetchFacets, searchDatasets } from "./api";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { useAsyncError } from "./utils";
@@ -58,7 +58,11 @@ const DatasetPropDD = ({ dataset, dsetKey, isURI, ...props }) => {
 };
 
 const DatasetCard = ({ dataset }) => {
-  const mtClass = "mt-2";
+  const lineSeparator = (
+    <div className="col-12 p-0">
+      <div className="m-2 border border-light" />
+    </div>
+  );
 
   return (
     <Card>
@@ -79,9 +83,10 @@ const DatasetCard = ({ dataset }) => {
 
             return dist ? (
               <p key={dist.url}>
-                <a href={dist.url}>
-                  <FiDownloadCloud className="mr-2" />
-                  {dist.mediaType}
+                <a className="btn btn-light btn-sm text-left" href={dist.url}>
+                  <FiExternalLink className="mr-2" />
+                  <span className="mr-2">Access URL</span>
+                  <code className="text-info">{dist.mediaType}</code>
                 </a>
               </p>
             ) : null;
@@ -91,59 +96,21 @@ const DatasetCard = ({ dataset }) => {
             <dd className={CLASS_DD}>
               <code>{dataset.catalog}</code>
             </dd>
-            <DatasetPropDT
-              className={mtClass}
-              name="Identifier"
-              type="rdfs:Literal"
-            />
-            <DatasetPropDD
-              className={mtClass}
-              dataset={dataset}
-              dsetKey="identifier"
-            />
-            <DatasetPropDT
-              className={mtClass}
-              name="Description"
-              type="rdfs:Literal"
-            />
-            <DatasetPropDD
-              className={mtClass}
-              dataset={dataset}
-              dsetKey="description"
-            />
-            <DatasetPropDT
-              className={mtClass}
-              name="Language"
-              type="dct:LinguisticSystem"
-            />
-            <DatasetPropDD
-              className={mtClass}
-              dataset={dataset}
-              dsetKey="language"
-              isURI={true}
-            />
-            <DatasetPropDT
-              className={mtClass}
-              name="Theme"
-              type="skos:Concept"
-            />
-            <DatasetPropDD
-              className={mtClass}
-              dataset={dataset}
-              dsetKey="theme"
-              isURI={true}
-            />
-            <DatasetPropDT
-              className={mtClass}
-              name="Location"
-              type="dct:Location"
-            />
-            <DatasetPropDD
-              className={mtClass}
-              dataset={dataset}
-              dsetKey="location"
-              isURI={true}
-            />
+            {lineSeparator}
+            <DatasetPropDT name="Identifier" type="rdfs:Literal" />
+            <DatasetPropDD dataset={dataset} dsetKey="identifier" />
+            {lineSeparator}
+            <DatasetPropDT name="Description" type="rdfs:Literal" />
+            <DatasetPropDD dataset={dataset} dsetKey="description" />
+            {lineSeparator}
+            <DatasetPropDT name="Language" type="dct:LinguisticSystem" />
+            <DatasetPropDD dataset={dataset} dsetKey="language" isURI={true} />
+            {lineSeparator}
+            <DatasetPropDT name="Theme" type="skos:Concept" />
+            <DatasetPropDD dataset={dataset} dsetKey="theme" isURI={true} />
+            {lineSeparator}
+            <DatasetPropDT name="Location" type="dct:Location" />
+            <DatasetPropDD dataset={dataset} dsetKey="location" isURI={true} />
           </dl>
         </small>
       </Card.Body>
