@@ -276,6 +276,7 @@ def _get_datasets(graph, uris):
             ?datasetSpatial 
             ?theme 
             ?language
+            ?distributionDescription 
         WHERE {{
             ?catalog rdf:type dcat:Catalog .
             ?dataset rdf:type dcat:Dataset . 
@@ -289,6 +290,7 @@ def _get_datasets(graph, uris):
             ?dataset dct:spatial ?datasetSpatial . 
             ?dataset dcat:theme ?theme . 
             ?catalog dct:LinguisticSystem ?language .
+            OPTIONAL {{ ?distribution dct:description ?distributionDescription }} . 
             FILTER (?dataset IN ({}))
         }}
         """.format(", ".join(uris))
@@ -307,9 +309,21 @@ def _get_datasets(graph, uris):
         dset["location"] = dset.get("location", []) + [item[8].n3()]
         dset["theme"] = dset.get("theme", []) + [item[9].n3()]
         dset["language"] = dset.get("language", []) + [item[10].n3()]
-        distr = dset.get("distribution", {})
-        distr[item[5].n3()] = {"url": item[6].n3(), "type": item[7].n3()}
-        dset["distribution"] = distr
+
+        distr_dict = dset.get("distribution", {})
+        distr_uri = item[5].n3()
+        distr_item = distr_dict.get(distr_uri, {})
+        distr_item["url"] = item[6].n3()
+        distr_item["type"] = item[7].n3()
+
+        if item[11]:
+            distr_item_descr = distr_item.get("description", [])
+            distr_item_descr.append(item[11].n3())
+            distr_item["description"] = list(set(distr_item_descr))
+
+        distr_dict[distr_uri] = distr_item
+        dset["distribution"] = distr_dict
+
         datasets[dset_uri] = dset
 
     for dset in datasets.values():

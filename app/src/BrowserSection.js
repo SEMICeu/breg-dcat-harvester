@@ -14,11 +14,13 @@ import { useAsyncError } from "./utils";
 
 const REGEX_URL = /<(http.+)>/;
 const REGEX_TYPE = /<https:\/\/www.w3.org\/ns\/iana\/media-types\/(.+)#Resource>/;
-
+const REGEX_LANG_STR = /"(.+)"@([a-zA-Z][a-zA-Z])$/;
+const DEFAULT_URL_DESCRIPTION = "Access URL";
+const DEFAULT_PREF_LANG = "en";
 const CLASS_DT = "col-md-2 text-muted";
 const CLASS_DD = "col-md-10";
 
-const parseDistribution = ({ item }) => {
+const getDistributionAccessUrl = ({ item }) => {
   const urlResult = REGEX_URL.exec(item.url);
   const typeResult = REGEX_TYPE.exec(item.type);
 
@@ -30,6 +32,26 @@ const parseDistribution = ({ item }) => {
   const mediaType = typeResult[1];
 
   return { url, mediaType };
+};
+
+const getDistributionDescription = ({ item, defaultVal, prefLang }) => {
+  defaultVal = defaultVal || DEFAULT_URL_DESCRIPTION;
+  prefLang = prefLang || DEFAULT_PREF_LANG;
+
+  const reResults = item.description
+    ? _.filter(_.map(item.description, (descr) => REGEX_LANG_STR.exec(descr)))
+    : undefined;
+
+  if (!reResults || !_.some(reResults)) {
+    return defaultVal;
+  }
+
+  const prefResult = _.find(
+    reResults,
+    (reRes) => reRes.length === 3 && reRes[2] === prefLang
+  );
+
+  return prefResult ? prefResult[1] : _.first(reResults)[0];
 };
 
 const DatasetPropDT = ({ name, type, ...props }) => {
@@ -79,14 +101,16 @@ const DatasetCard = ({ dataset }) => {
       <Card.Body>
         <small>
           {_.map(dataset.distribution, (item) => {
-            const dist = parseDistribution({ item });
+            const dist = getDistributionAccessUrl({ item });
 
             return dist ? (
               <p key={dist.url}>
                 <a className="btn btn-light btn-sm text-left" href={dist.url}>
-                  <FiExternalLink className="mr-2" />
-                  <span className="mr-2">Access URL</span>
-                  <code className="text-info">{dist.mediaType}</code>
+                  <FiExternalLink className="mr-2 text-primary" />
+                  <span className="mr-2 align-middle">
+                    {getDistributionDescription({ item })}
+                  </span>
+                  <code className="text-muted">{dist.mediaType}</code>
                 </a>
               </p>
             ) : null;
