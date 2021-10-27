@@ -6,7 +6,6 @@ services:
       - "6379"
   api:
     build: .
-    image: breg-harvester
     ports:
       - "${HARVESTER_PUBLIC_PORT:-9090}:5000"
     depends_on:
@@ -21,7 +20,7 @@ services:
       HARVESTER_VALIDATOR_DISABLED: ${HARVESTER_VALIDATOR_DISABLED:-}
       HARVESTER_SOURCES: ${HARVESTER_SOURCES}
   worker:
-    image: breg-harvester
+    build: .
     depends_on:
       - redis
     environment:
